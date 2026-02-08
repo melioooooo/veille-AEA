@@ -16,7 +16,6 @@ interface SearchFiltersProps {
     filters: FilterState;
     onFiltersChange: (filters: FilterState) => void;
     availableCategories: string[];
-    availableSources: string[];
 }
 
 const DATE_OPTIONS = [
@@ -30,7 +29,6 @@ export default function SearchFilters({
     filters,
     onFiltersChange,
     availableCategories,
-    availableSources,
 }: SearchFiltersProps) {
     const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -97,8 +95,8 @@ export default function SearchFilters({
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setShowAdvanced(!showAdvanced)}
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm transition-colors ${showAdvanced || activeFiltersCount > 0
-                            ? 'bg-[#d4a574]/10 text-[#d4a574]'
-                            : 'bg-[#0a0a0a] text-[#666] hover:text-white'
+                        ? 'bg-[#d4a574]/10 text-[#d4a574]'
+                        : 'bg-[#0a0a0a] text-[#666] hover:text-white'
                         }`}
                 >
                     <Filter className="w-4 h-4" />
@@ -142,8 +140,8 @@ export default function SearchFilters({
                                             whileTap={{ scale: 0.98 }}
                                             onClick={() => updateFilter('dateRange', opt.value as FilterState['dateRange'])}
                                             className={`px-3 py-1.5 rounded text-xs transition-colors ${filters.dateRange === opt.value
-                                                    ? 'bg-white text-black'
-                                                    : 'bg-[#141414] text-[#a1a1a1] hover:text-white'
+                                                ? 'bg-white text-black'
+                                                : 'bg-[#141414] text-[#a1a1a1] hover:text-white'
                                                 }`}
                                         >
                                             {opt.label}
@@ -163,8 +161,8 @@ export default function SearchFilters({
                                             whileTap={{ scale: 0.98 }}
                                             onClick={() => toggleCategory(cat)}
                                             className={`px-3 py-1.5 rounded text-xs transition-colors ${filters.categories.includes(cat)
-                                                    ? 'bg-[#d4a574] text-black'
-                                                    : 'bg-[#141414] text-[#a1a1a1] hover:text-white'
+                                                ? 'bg-[#d4a574] text-black'
+                                                : 'bg-[#141414] text-[#a1a1a1] hover:text-white'
                                                 }`}
                                         >
                                             {cat}

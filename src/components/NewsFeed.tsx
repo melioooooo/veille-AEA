@@ -19,7 +19,7 @@ const container = {
             delayChildren: 0.1,
         }
     }
-};
+} as const;
 
 const itemVariant = {
     hidden: { opacity: 0, x: -10 },
@@ -32,7 +32,7 @@ const itemVariant = {
             damping: 30,
         }
     }
-};
+} as const;
 
 export default function NewsFeed({ news }: NewsFeedProps) {
     const getCategoryClass = (category: string) => {
@@ -140,8 +140,8 @@ export default function NewsFeed({ news }: NewsFeedProps) {
                                 <motion.span
                                     whileHover={{ scale: 1.15 }}
                                     className={`text-[10px] ml-auto ${newsItem.score >= 30 ? 'text-[#4ade80]' :
-                                            newsItem.score >= 20 ? 'text-[#fbbf24]' :
-                                                'text-[#666]'
+                                        newsItem.score >= 20 ? 'text-[#fbbf24]' :
+                                            'text-[#666]'
                                         }`}
                                 >
                                     {newsItem.score}

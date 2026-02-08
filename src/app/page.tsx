@@ -376,7 +376,6 @@ export default function DashboardPage() {
               filters={filters}
               onFiltersChange={setFilters}
               availableCategories={availableCategories}
-              availableSources={data.sources.map(s => s.name)}
             />
 
             {/* Recommendations */}

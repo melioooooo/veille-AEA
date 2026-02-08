@@ -21,6 +21,7 @@ export default function AlertSettings({ onClose }: AlertSettingsProps) {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
         setPrefs(getAlertPreferences());
         if ('Notification' in window) {

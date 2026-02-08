@@ -1,0 +1,405 @@
+import { NewsSource, FilterConfig } from './types';
+
+// ============================================
+// RSS SOURCES - Industry News
+// ============================================
+export const NEWS_SOURCES: NewsSource[] = [
+    // === ESPORT BUSINESS & INDUSTRY ===
+    {
+        id: 'esports-insider',
+        name: 'Esports Insider',
+        url: 'https://esportsinsider.com/feed/',
+        category: 'business',
+        enabled: true,
+    },
+    {
+        id: 'gamesindustry',
+        name: 'GamesIndustry.biz',
+        url: 'https://www.gamesindustry.biz/feed',
+        category: 'business',
+        enabled: true,
+    },
+    {
+        id: 'venturebeat-games',
+        name: 'VentureBeat Gaming',
+        url: 'https://venturebeat.com/category/games/feed/',
+        category: 'business',
+        enabled: true,
+    },
+    {
+        id: 'gamedeveloper',
+        name: 'Game Developer',
+        url: 'https://www.gamedeveloper.com/rss.xml',
+        category: 'business',
+        enabled: true,
+    },
+
+    // === TECHNOLOGY & INNOVATION ===
+    {
+        id: 'usine-digitale',
+        name: 'Usine Digitale',
+        url: 'https://www.usine-digitale.fr/rss',
+        category: 'tech',
+        enabled: true,
+    },
+    {
+        id: 'the-verge-gaming',
+        name: 'The Verge Gaming',
+        url: 'https://www.theverge.com/rss/games/index.xml',
+        category: 'tech',
+        enabled: true,
+    },
+    {
+        id: 'ars-technica-gaming',
+        name: 'Ars Technica Gaming',
+        url: 'https://feeds.arstechnica.com/arstechnica/gaming',
+        category: 'tech',
+        enabled: true,
+    },
+
+    // === ESPORT NEWS & COVERAGE ===
+    {
+        id: 'dexerto',
+        name: 'Dexerto',
+        url: 'https://www.dexerto.com/feed/',
+        category: 'industry',
+        enabled: true,
+    },
+    {
+        id: 'dot-esports',
+        name: 'Dot Esports',
+        url: 'https://dotesports.com/feed',
+        category: 'industry',
+        enabled: true,
+    },
+    {
+        id: 'polygon',
+        name: 'Polygon',
+        url: 'https://www.polygon.com/rss/index.xml',
+        category: 'industry',
+        enabled: true,
+    },
+    {
+        id: 'kotaku',
+        name: 'Kotaku',
+        url: 'https://kotaku.com/rss',
+        category: 'industry',
+        enabled: true,
+    },
+    {
+        id: 'gamekult',
+        name: 'Gamekult',
+        url: 'https://www.gamekult.com/feed.xml',
+        category: 'industry',
+        enabled: true,
+    },
+    {
+        id: 'ign',
+        name: 'IGN',
+        url: 'https://feeds.feedburner.com/ign/all',
+        category: 'industry',
+        enabled: true,
+    },
+    {
+        id: 'gamespot',
+        name: 'GameSpot',
+        url: 'https://www.gamespot.com/feeds/mashup/',
+        category: 'industry',
+        enabled: true,
+    },
+    {
+        id: 'pcgamer',
+        name: 'PC Gamer',
+        url: 'https://www.pcgamer.com/rss/',
+        category: 'industry',
+        enabled: true,
+    },
+    {
+        id: 'eurogamer',
+        name: 'Eurogamer',
+        url: 'https://www.eurogamer.net/feed',
+        category: 'industry',
+        enabled: true,
+    },
+    {
+        id: 'rockpapershotgun',
+        name: 'Rock Paper Shotgun',
+        url: 'https://www.rockpapershotgun.com/feed',
+        category: 'industry',
+        enabled: true,
+    },
+
+    // === FRENCH SOURCES ===
+    {
+        id: 'numerama-tech',
+        name: 'Numerama',
+        url: 'https://www.numerama.com/feed/',
+        category: 'tech',
+        enabled: true,
+    },
+    {
+        id: 'frandroid',
+        name: 'Frandroid',
+        url: 'https://www.frandroid.com/feed',
+        category: 'tech',
+        enabled: true,
+    },
+];
+
+// ============================================
+// COMPETITOR GAMING CENTERS - France
+// ============================================
+export interface Competitor {
+    id: string;
+    name: string;
+    location: string;
+    website: string;
+    socialLinks: {
+        instagram?: string;
+        twitter?: string;
+        facebook?: string;
+        linkedin?: string;
+    };
+    description: string;
+    size?: string;
+    features?: string[];
+}
+
+export const COMPETITORS: Competitor[] = [
+    // === PARIS / ILE-DE-FRANCE ===
+    {
+        id: 'espot-paris',
+        name: 'Espot Paris',
+        location: 'Paris (face au Louvre)',
+        website: 'https://espot.fr',
+        socialLinks: {
+            instagram: 'https://instagram.com/espotparis',
+            twitter: 'https://twitter.com/EspotParis',
+        },
+        description: 'Plus grand espace gaming de Paris avec 2000m², 120+ PC, 50 consoles, simulateurs Alpine, arène 150 places',
+        size: '2000m²',
+        features: ['120+ PC', '50 consoles', 'Sim racing', 'Arène 150 places', '2 bars'],
+    },
+    {
+        id: 'vhive-vitality',
+        name: 'V.Hive (Team Vitality)',
+        location: 'Paris',
+        website: 'https://vitality.gg',
+        socialLinks: {
+            instagram: 'https://instagram.com/teamvitality',
+            twitter: 'https://twitter.com/TeamVitality',
+        },
+        description: 'QG de Team Vitality - espace esport, cybercafé et events. Équipement haut de gamme, boutique Team Vitality',
+        size: '1000m²',
+        features: ['Cybercafé', 'Events esport', 'Boutique Vitality', 'Masterclasses'],
+    },
+    {
+        id: 'esportbox-paris',
+        name: 'eSportBox',
+        location: 'Paris (plusieurs adresses)',
+        website: 'https://esportbox.co',
+        socialLinks: {
+            instagram: 'https://instagram.com/esportbox',
+        },
+        description: 'Salles de gaming privées réservables à Paris. Concept de boxes privatifs',
+        features: ['Boxes privatifs', 'Réservation en ligne', 'Multi-sites'],
+    },
+    {
+        id: 'gaming-house-bussy',
+        name: 'Gaming House',
+        location: 'Bussy-Saint-Georges (IDF)',
+        website: 'https://gaming-house.fr',
+        socialLinks: {},
+        description: 'Nouvel espace gaming ouvert en 2025 avec tournois, formations et café gaming. Héberge équipe Ici Japon Corp',
+        features: ['Tournois', 'Formations', 'Café gaming', 'Équipe résidente'],
+    },
+
+    // === LYON ===
+    {
+        id: 'lyon-esport',
+        name: 'Lyon e-Sport',
+        location: 'Lyon',
+        website: 'https://lyon-esport.fr',
+        socialLinks: {
+            twitter: 'https://twitter.com/LyoneSport',
+            instagram: 'https://instagram.com/lyonesport',
+        },
+        description: 'Association organisatrice de LANs majeures à Lyon. Prochaine LAN: Nov 2025 (Valorant 15K€, SSBU 1.5K€)',
+        features: ['LAN majeure annuelle', 'Tournois Valorant', 'Tournois SSBU'],
+    },
+
+    // === MARSEILLE ===
+    {
+        id: 'mces-gaming-center',
+        name: 'MCES Gaming Center',
+        location: 'Marseille (Sainte-Marthe)',
+        website: 'https://mces.gg',
+        socialLinks: {
+            twitter: 'https://twitter.com/maboratory',
+            instagram: 'https://instagram.com/maboratory',
+        },
+        description: 'Gaming center de MCES à Marseille avec PC gaming et événements réguliers',
+        features: ['PC Gaming', 'Événements', 'Équipe pro MCES'],
+    },
+    {
+        id: 'nexus-marseille',
+        name: 'The Nexus',
+        location: 'Marseille',
+        website: 'https://thenexus.fr',
+        socialLinks: {},
+        description: 'Bar esport à Marseille avec PC, consoles et diffusion de compétitions',
+        features: ['Bar', 'PC/Consoles', 'Diffusion compétitions'],
+    },
+
+    // === AUTRES RÉGIONS ===
+    {
+        id: 'webedia-gaming-house',
+        name: 'Webedia Gaming House',
+        location: 'Levallois-Perret',
+        website: 'https://webedia-group.com',
+        socialLinks: {},
+        description: 'Studio gaming de Webedia avec streameurs et créateurs de contenu',
+        features: ['Studio streaming', 'Créateurs contenu'],
+    },
+    {
+        id: 'game-one-studio',
+        name: 'Game One Studio',
+        location: 'Paris',
+        website: 'https://gameone.net',
+        socialLinks: {
+            twitter: 'https://twitter.com/GameOneTV',
+        },
+        description: 'Studio de la chaîne Game One avec événements et émissions gaming',
+        features: ['Studio TV', 'Émissions gaming'],
+    },
+    {
+        id: 'gaming-campus',
+        name: 'Gaming Campus',
+        location: 'Lyon, Paris',
+        website: 'https://gamingcampus.fr',
+        socialLinks: {
+            instagram: 'https://instagram.com/gamingcampus',
+        },
+        description: 'École esport et gaming avec campus équipés et équipes étudiantes',
+        features: ['Formation esport', 'Campus équipés', 'Équipes étudiantes'],
+    },
+];
+
+// ============================================
+// FILTER CONFIGURATION
+// ============================================
+export const FILTER_CONFIG: FilterConfig = {
+    // Terms to completely exclude
+    blacklist: [
+        'meltdown',
+        'meltdown bar',
+        'meltdown bars',
+        'fortnite skin',
+        'patch notes',
+        'tier list',
+        'build guide',
+        'tier-list',
+        'skin reveal',
+        'battle pass',
+        'season pass',
+        'character unlock',
+        'cosmetic',
+    ],
+
+    // Keywords that boost relevance score for Alsace Esport Arena business
+    boostKeywords: [
+        // Direct Business Relevance
+        { keyword: 'arena', weight: 20 },
+        { keyword: 'alsace', weight: 25 },
+        { keyword: 'strasbourg', weight: 20 },
+        { keyword: 'gaming center', weight: 18 },
+        { keyword: 'esport venue', weight: 18 },
+        { keyword: 'lan center', weight: 15 },
+        { keyword: 'lan party', weight: 12 },
+        { keyword: 'gaming lounge', weight: 15 },
+        { keyword: 'gaming cafe', weight: 15 },
+
+        // Competitor mentions (for competitive intel)
+        { keyword: 'espot', weight: 15 },
+        { keyword: 'vitality', weight: 12 },
+        { keyword: 'v.hive', weight: 15 },
+        { keyword: 'mces', weight: 12 },
+        { keyword: 'lyon esport', weight: 10 },
+        { keyword: 'gaming campus', weight: 10 },
+
+        // Business Strategy
+        { keyword: 'revenue', weight: 12 },
+        { keyword: 'business model', weight: 12 },
+        { keyword: 'monetization', weight: 10 },
+        { keyword: 'franchise', weight: 8 },
+        { keyword: 'investissement', weight: 10 },
+        { keyword: 'financement', weight: 10 },
+        { keyword: 'levée de fonds', weight: 12 },
+        { keyword: 'startup', weight: 8 },
+        { keyword: 'expansion', weight: 10 },
+        { keyword: 'market size', weight: 10 },
+        { keyword: 'market growth', weight: 10 },
+
+        // Technology & Infrastructure
+        { keyword: 'cloud gaming', weight: 12 },
+        { keyword: 'game streaming', weight: 10 },
+        { keyword: 'réalité virtuelle', weight: 8 },
+        { keyword: 'vr gaming', weight: 10 },
+        { keyword: 'xr', weight: 8 },
+        { keyword: 'hardware', weight: 6 },
+        { keyword: 'nvidia', weight: 5 },
+        { keyword: 'amd', weight: 5 },
+        { keyword: 'pc gaming', weight: 8 },
+        { keyword: 'gaming setup', weight: 8 },
+        { keyword: 'esport equipment', weight: 10 },
+
+        // Regulation & Legal
+        { keyword: 'réglementation', weight: 15 },
+        { keyword: 'législation', weight: 15 },
+        { keyword: 'regulation', weight: 12 },
+        { keyword: 'mineurs', weight: 10 },
+        { keyword: 'age restriction', weight: 10 },
+        { keyword: 'france esports', weight: 15 },
+        { keyword: 'fédération', weight: 10 },
+        { keyword: 'gaming law', weight: 12 },
+
+        // Market & Trends
+        { keyword: 'market report', weight: 12 },
+        { keyword: 'étude de marché', weight: 12 },
+        { keyword: 'industry growth', weight: 10 },
+        { keyword: 'audience growth', weight: 10 },
+        { keyword: 'sponsoring', weight: 10 },
+        { keyword: 'sponsorship', weight: 10 },
+        { keyword: 'partnership', weight: 10 },
+        { keyword: 'partenariat', weight: 10 },
+        { keyword: 'viewership', weight: 8 },
+
+        // Events & Community
+        { keyword: 'tournament', weight: 8 },
+        { keyword: 'tournoi', weight: 8 },
+        { keyword: 'compétition', weight: 8 },
+        { keyword: 'team building', weight: 15 },
+        { keyword: 'corporate gaming', weight: 15 },
+        { keyword: 'esport event', weight: 10 },
+        { keyword: 'community', weight: 8 },
+        { keyword: 'local esports', weight: 12 },
+        { keyword: 'grassroots', weight: 10 },
+    ],
+
+    // Category importance weights
+    categoryWeights: {
+        business: 1.6,
+        regulation: 1.5,
+        local: 1.4,
+        tech: 1.2,
+        industry: 1.0,
+    },
+};
+
+// Dashboard configuration
+export const DASHBOARD_CONFIG = {
+    recommendationsPerWeek: 5,
+    maxNewsItems: 200,
+    refreshIntervalMs: 60 * 60 * 1000, // 1 hour
+    dateFormat: 'dd MMM yyyy HH:mm',
+};

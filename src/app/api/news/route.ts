@@ -26,18 +26,31 @@ export async function GET() {
             .map(([category, count]) => ({ category, count }))
             .sort((a, b) => b.count - a.count);
 
+        const stats = {
+            totalNews: news.length,
+            newsToday,
+            topCategories,
+            lastUpdate: new Date().toISOString(),
+        };
+
+        // Save daily snapshot to history
+        // This is non-blocking - we don't await the result to keep response fast
+        // unless we want to ensure it's saved before returning
+        try {
+            const { saveDailySnapshot } = await import('@/lib/db');
+            await saveDailySnapshot(recommendations, stats);
+        } catch (dbError) {
+            console.error('Failed to save history snapshot:', dbError);
+            // Non-fatal error, continue to return current data
+        }
+
         return NextResponse.json({
             success: true,
             data: {
                 news,
                 recommendations,
                 sources,
-                stats: {
-                    totalNews: news.length,
-                    newsToday,
-                    topCategories,
-                    lastUpdate: new Date().toISOString(),
-                },
+                stats,
             },
         });
     } catch (error) {

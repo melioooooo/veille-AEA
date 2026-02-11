@@ -6,7 +6,7 @@ import { format, isAfter, subDays, subMonths } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import {
   Sparkles, Calendar as CalendarIcon, BarChart3,
-  Bookmark, Bell, Download, FileText, FileSpreadsheet
+  Bookmark, Bell, Download, FileText, FileSpreadsheet, Clock
 } from 'lucide-react';
 
 import Header from '@/components/Header';
@@ -24,6 +24,7 @@ import MarketAnalysis from '@/components/MarketAnalysis';
 import ROICalculator from '@/components/ROICalculator';
 import AlertSettings from '@/components/AlertSettings';
 import ThemeToggle from '@/components/ThemeToggle';
+import HistoryPanel from '@/components/HistoryPanel';
 
 import { NewsItem, NewsSource, DashboardStats } from '@/lib/types';
 import { COMPETITORS } from '@/lib/config';
@@ -37,7 +38,7 @@ interface DashboardData {
   stats: DashboardStats;
 }
 
-type TabId = 'news' | 'calendar' | 'analytics';
+type TabId = 'news' | 'calendar' | 'analytics' | 'history';
 
 const contentVariants = {
   initial: { opacity: 0, y: 20 },
@@ -224,6 +225,7 @@ export default function DashboardPage() {
     { id: 'news' as const, label: 'Veille', icon: Sparkles },
     { id: 'calendar' as const, label: 'Calendrier', icon: CalendarIcon },
     { id: 'analytics' as const, label: 'Analyse', icon: BarChart3 },
+    { id: 'history' as const, label: 'Historique', icon: Clock },
   ];
 
   return (
@@ -452,6 +454,18 @@ export default function DashboardPage() {
                 />
               </div>
             </div>
+          </motion.div>
+        )}
+
+        {activeTab === 'history' && (
+          <motion.div
+            key="history"
+            variants={contentVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            <HistoryPanel />
           </motion.div>
         )}
       </AnimatePresence>

@@ -5,7 +5,7 @@ import { NewsItem, DashboardStats } from './types';
 export async function getHistoryDates() {
     try {
         const { rows } = await sql`
-            SELECT date FROM recommendations_history 
+            SELECT to_char(date, 'YYYY-MM-DD') as date FROM recommendations_history 
             ORDER BY date DESC 
             LIMIT 30;
         `;
@@ -19,9 +19,10 @@ export async function getHistoryDates() {
 export async function getHistoryByDate(date: string) {
     try {
         // Ensure date is in YYYY-MM-DD format
+        // Postgres DATE type can be compared directly with string 'YYYY-MM-DD'
         const { rows } = await sql`
             SELECT items, stats FROM recommendations_history 
-            WHERE date::text LIKE ${date + '%'}
+            WHERE date = ${date}::date
             LIMIT 1;
         `;
         if (rows.length > 0) {

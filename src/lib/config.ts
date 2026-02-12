@@ -283,12 +283,116 @@ export const COMPETITORS: Competitor[] = [
         description: 'École esport et gaming avec campus équipés et équipes étudiantes',
         features: ['Formation esport', 'Campus équipés', 'Équipes étudiantes'],
     },
+    // === LILLE ===
+    {
+        id: 'hall-u-need-lille',
+        name: 'Hall U Need',
+        location: 'Saint-André-lez-Lille',
+        website: 'https://halluneed.com',
+        socialLinks: {
+            instagram: 'https://instagram.com/halluneed',
+            facebook: 'https://facebook.com/halluneed',
+        },
+        description: 'Complexe de loisirs indoor 7000m² avec arcade, bowling, VR, karaoké et restaurant-bar',
+        size: '7000m²',
+        features: ['Arcade', 'VR', 'Bowling', 'Restaurant', 'Bar', 'Karaoké'],
+    },
+    {
+        id: 'atom-city-lille',
+        name: 'Atom City',
+        location: 'Lille',
+        website: 'https://atom-city.fr',
+        socialLinks: {
+            facebook: 'https://facebook.com/atomcity.arcade',
+        },
+        description: 'Association dédiée à l\'arcade et au retrogaming, 150m² de bornes authentiques',
+        size: '150m²',
+        features: ['Arcade authentique', 'Retrogaming', 'Association'],
+    },
+
+    // === RENNES ===
+    {
+        id: 'station-35-rennes',
+        name: 'Station 35',
+        location: 'Rennes (Cesson-Sévigné)',
+        website: 'https://stationesport.fr',
+        socialLinks: {
+            instagram: 'https://instagram.com/station35_esport',
+        },
+        description: 'Bar esport et gaming avec PC, consoles, et diffusion de matchs. Ambiance communautaire',
+        features: ['Bar Esport', 'PC Gaming', 'Consoles', 'Tournois'],
+    },
+    {
+        id: 'meltdown-rennes',
+        name: 'Meltdown Rennes',
+        location: 'Rennes',
+        website: 'https://meltdown.bar/rennes',
+        socialLinks: {
+            facebook: 'https://facebook.com/MeltdownRennes',
+        },
+        description: 'Bar esport de la franchise Meltdown. Cocktails gaming et PC en libre accès',
+        features: ['Bar Esport', 'PC Gaming', 'Cocktails'],
+    },
+
+    // === AIX-EN-PROVENCE ===
+    {
+        id: 'meltdown-aix',
+        name: 'Meltdown Aix',
+        location: 'Aix-en-Provence',
+        website: 'https://meltdown.bar/aix',
+        socialLinks: {
+            facebook: 'https://facebook.com/MeltdownAix',
+        },
+        description: 'Bar esport au cœur d\'Aix. Soirées à thèmes et tournois fun',
+        features: ['Bar Esport', 'PC Gaming', 'Soirées à thème'],
+    },
+
+    // === BORDEAUX ===
+    {
+        id: 'meltdown-bordeaux',
+        name: 'Meltdown Bordeaux',
+        location: 'Bordeaux',
+        website: 'https://meltdown.bar/bordeaux',
+        socialLinks: {},
+        description: 'Bar esport incontournable à Bordeaux',
+        features: ['Bar Esport', 'PC Gaming'],
+    },
+    {
+        id: 'level-bar-bordeaux',
+        name: 'Level Bar',
+        location: 'Bordeaux',
+        website: 'https://levelbar.fr',
+        socialLinks: {},
+        description: 'Bar gaming et culture geek. Jeux de société et jeux vidéo',
+        features: ['Bar Gaming', 'Jeux de société', 'Consoles'],
+    },
+
+    // === TOULOUSE ===
+    {
+        id: 'meltdown-toulouse',
+        name: 'Meltdown Toulouse',
+        location: 'Toulouse',
+        website: 'https://meltdown.bar/toulouse',
+        socialLinks: {},
+        description: 'Le spot esport de la ville rose',
+        features: ['Bar Esport', 'PC Gaming'],
+    },
+    {
+        id: 'games-factory-toulouse',
+        name: 'Games Factory',
+        location: 'Toulouse',
+        website: 'https://gamesfactory.fr',
+        socialLinks: {},
+        description: 'Complexe multi-loisirs : Bowling, Laser Game, VR et Arcade',
+        features: ['Bowling', 'Laser Game', 'VR', 'Arcade'],
+    },
 ];
 
 // ============================================
 // FILTER CONFIGURATION
 // ============================================
 export const FILTER_CONFIG: FilterConfig = {
+    // Terms to completely exclude
     // Terms to completely exclude
     blacklist: [
         'meltdown',
@@ -304,6 +408,31 @@ export const FILTER_CONFIG: FilterConfig = {
         'season pass',
         'character unlock',
         'cosmetic',
+        // New exclusions for better relevance
+        'mod',
+        'mods',
+        'best mods',
+        'nexus mod',
+        'stardew valley',
+        'elden ring',
+        'pokemon',
+        'guide',
+        'walkthrough',
+        'how to',
+        'how-to',
+        'soluce',
+        'solution',
+        'best deck',
+        'meta deck',
+        'free game',
+        'giveaway',
+        'deals',
+        'sales',
+        'discount',
+        'bundle',
+        'steam sale',
+        'epic free',
+        'twitch drop',
     ],
 
     // Keywords that boost relevance score for Alsace Esport Arena business
@@ -339,6 +468,13 @@ export const FILTER_CONFIG: FilterConfig = {
         { keyword: 'expansion', weight: 10 },
         { keyword: 'market size', weight: 10 },
         { keyword: 'market growth', weight: 10 },
+        { keyword: 'strategy', weight: 12 },
+        { keyword: 'stratégie', weight: 12 },
+        { keyword: 'management', weight: 10 },
+        { keyword: 'gestion', weight: 10 },
+        { keyword: 'model économique', weight: 15 },
+        { keyword: 'rentabilité', weight: 15 },
+        { keyword: 'profitability', weight: 15 },
 
         // Technology & Infrastructure
         { keyword: 'cloud gaming', weight: 12 },
@@ -384,6 +520,51 @@ export const FILTER_CONFIG: FilterConfig = {
         { keyword: 'community', weight: 8 },
         { keyword: 'local esports', weight: 12 },
         { keyword: 'grassroots', weight: 10 },
+
+        // === PESTEL ANALYSIS KEYWORDS ===
+        // Political & Legal
+        { keyword: 'loi', weight: 15 },
+        { keyword: 'légal', weight: 15 },
+        { keyword: 'gdpr', weight: 12 },
+        { keyword: 'rgpd', weight: 12 },
+        { keyword: 'décret', weight: 12 },
+        { keyword: 'subvention', weight: 12 },
+        { keyword: 'politique publique', weight: 12 },
+
+        // Economic
+        { keyword: 'inflation', weight: 10 },
+        { keyword: 'pouvoir d\'achat', weight: 10 },
+        { keyword: 'crise économique', weight: 10 },
+        { keyword: 'budget', weight: 8 },
+        { keyword: 'rentabilité', weight: 10 },
+
+        // Social & Consumer Insights
+        { keyword: 'gen z', weight: 15 },
+        { keyword: 'millennials', weight: 12 },
+        { keyword: 'habitudes de consommation', weight: 15 },
+        { keyword: 'comportement', weight: 12 },
+        { keyword: 'tendance sociale', weight: 12 },
+        { keyword: 'inclusion', weight: 12 },
+        { keyword: 'diversité', weight: 12 },
+        { keyword: 'mixité', weight: 12 },
+        { keyword: 'santé mentale', weight: 12 },
+
+        // Technological
+        { keyword: 'ai', weight: 12 },
+        { keyword: 'ia', weight: 12 },
+        { keyword: 'intelligence artificielle', weight: 12 },
+        { keyword: 'blockchain', weight: 10 },
+        { keyword: 'web3', weight: 10 },
+        { keyword: '5g', weight: 8 },
+        { keyword: 'innovation', weight: 10 },
+
+        // Environmental
+        { keyword: 'écologie', weight: 12 },
+        { keyword: 'rse', weight: 15 },
+        { keyword: 'carbone', weight: 12 },
+        { keyword: 'durable', weight: 12 },
+        { keyword: 'sobriété énergétique', weight: 15 },
+        { keyword: 'green', weight: 10 },
     ],
 
     // Category importance weights

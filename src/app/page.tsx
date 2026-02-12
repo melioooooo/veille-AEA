@@ -444,7 +444,7 @@ export default function DashboardPage() {
             exit="exit"
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <MarketAnalysis competitors={COMPETITORS} />
+              <MarketAnalysis competitors={COMPETITORS} news={data.news} />
               <ROICalculator />
               <div className="lg:col-span-2">
                 <CompetitorTimeline

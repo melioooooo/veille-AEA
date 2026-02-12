@@ -1,11 +1,17 @@
 'use client';
 
+import SWOTAnalysis from './SWOTAnalysis';
+import PESTELRadar from './PESTELRadar';
+import { NewsItem } from '@/lib/types';
+import { Fragment } from 'react';
+
 import { motion } from 'framer-motion';
 import { Target, Check, X, AlertCircle } from 'lucide-react';
 import { Competitor } from '@/lib/config';
 
 interface MarketAnalysisProps {
     competitors: Competitor[];
+    news?: NewsItem[]; // Optional news prop for analysis
 }
 
 // Feature categories and items for market analysis
@@ -56,7 +62,7 @@ function hasFeature(competitor: Competitor, featureId: string): boolean | null {
     return keywords.some(kw => text.includes(kw)) ? true : null;
 }
 
-export default function MarketAnalysis({ competitors }: MarketAnalysisProps) {
+export default function MarketAnalysis({ competitors, news = [] }: MarketAnalysisProps) {
     // Find gaps (features no competitor has)
     const gaps: string[] = [];
 
@@ -70,95 +76,108 @@ export default function MarketAnalysis({ competitors }: MarketAnalysisProps) {
     }
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring" as const, stiffness: 400, damping: 30 }}
-            className="card p-5"
-        >
-            <div className="flex items-center gap-2 mb-4">
-                <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring" as const, stiffness: 500 }}
-                >
-                    <Target className="w-4 h-4 text-[#f87171]" />
-                </motion.div>
-                <h2 className="text-sm font-medium">Analyse de marché</h2>
+        <div className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* SWOT Analysis - Takes 2 cols */}
+                <div className="lg:col-span-2">
+                    <SWOTAnalysis news={news} />
+                </div>
+                {/* PESTEL Analysis - Takes 1 col */}
+                <div>
+                    <PESTELRadar news={news} />
+                </div>
             </div>
 
-            {/* Feature Matrix */}
-            <div className="overflow-x-auto mb-4">
-                <table className="w-full text-xs">
-                    <thead>
-                        <tr className="border-b border-[rgba(255,255,255,0.06)]">
-                            <th className="text-left py-2 pr-4 text-[#666] font-medium">Service</th>
-                            {competitors.slice(0, 4).map(c => (
-                                <th key={c.id} className="text-center py-2 px-2 text-[#666] font-medium">
-                                    {c.name.split(' ')[0]}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {Object.entries(FEATURE_MATRIX).map(([category, features]) => (
-                            <>
-                                <tr key={category}>
-                                    <td colSpan={5} className="pt-3 pb-1 text-[10px] uppercase tracking-wider text-[#666]">
-                                        {category}
-                                    </td>
-                                </tr>
-                                {features.map((feature, fIndex) => (
-                                    <motion.tr
-                                        key={feature.id}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ delay: fIndex * 0.02 }}
-                                        className="border-b border-[rgba(255,255,255,0.03)]"
-                                    >
-                                        <td className="py-2 pr-4">
-                                            <span className="mr-1">{feature.icon}</span>
-                                            {feature.label}
-                                        </td>
-                                        {competitors.slice(0, 4).map(c => {
-                                            const has = hasFeature(c, feature.id);
-                                            return (
-                                                <td key={c.id} className="text-center py-2">
-                                                    {has === true ? (
-                                                        <Check className="w-4 h-4 text-[#4ade80] mx-auto" />
-                                                    ) : has === false ? (
-                                                        <X className="w-4 h-4 text-[#f87171] mx-auto" />
-                                                    ) : (
-                                                        <span className="text-[#666]">—</span>
-                                                    )}
-                                                </td>
-                                            );
-                                        })}
-                                    </motion.tr>
+            <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ type: "spring" as const, stiffness: 400, damping: 30 }}
+                className="card p-5"
+            >
+                <div className="flex items-center gap-2 mb-4">
+                    <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring" as const, stiffness: 500 }}
+                    >
+                        <Target className="w-4 h-4 text-[#f87171]" />
+                    </motion.div>
+                    <h2 className="text-sm font-medium">Benchmark Concurrentiel</h2>
+                </div>
+
+                {/* Feature Matrix */}
+                <div className="overflow-x-auto mb-4">
+                    <table className="w-full text-xs">
+                        <thead>
+                            <tr className="border-b border-[rgba(255,255,255,0.06)]">
+                                <th className="text-left py-2 pr-4 text-[#666] font-medium">Service</th>
+                                {competitors.slice(0, 4).map(c => (
+                                    <th key={c.id} className="text-center py-2 px-2 text-[#666] font-medium">
+                                        {c.name.split(' ')[0]}
+                                    </th>
                                 ))}
-                            </>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {Object.entries(FEATURE_MATRIX).map(([category, features]) => (
+                                <Fragment key={category}>
+                                    <tr>
+                                        <td colSpan={5} className="pt-3 pb-1 text-[10px] uppercase tracking-wider text-[#666]">
+                                            {category}
+                                        </td>
+                                    </tr>
+                                    {features.map((feature, fIndex) => (
+                                        <motion.tr
+                                            key={feature.id}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ delay: fIndex * 0.02 }}
+                                            className="border-b border-[rgba(255,255,255,0.03)]"
+                                        >
+                                            <td className="py-2 pr-4">
+                                                <span className="mr-1">{feature.icon}</span>
+                                                {feature.label}
+                                            </td>
+                                            {competitors.slice(0, 4).map(c => {
+                                                const has = hasFeature(c, feature.id);
+                                                return (
+                                                    <td key={c.id} className="text-center py-2">
+                                                        {has === true ? (
+                                                            <Check className="w-4 h-4 text-[#4ade80] mx-auto" />
+                                                        ) : has === false ? (
+                                                            <X className="w-4 h-4 text-[#f87171] mx-auto" />
+                                                        ) : (
+                                                            <span className="text-[#666]">—</span>
+                                                        )}
+                                                    </td>
+                                                );
+                                            })}
+                                        </motion.tr>
+                                    ))}
+                                </Fragment>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
-            {/* Market Gaps */}
-            {gaps.length > 0 && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                    className="p-3 rounded-lg bg-[#4ade80]/5 border border-[#4ade80]/20"
-                >
-                    <div className="flex items-center gap-2 text-[#4ade80] text-xs font-medium mb-2">
-                        <AlertCircle className="w-3 h-3" />
-                        Opportunités identifiées
-                    </div>
-                    <p className="text-xs text-[#a1a1a1]">
-                        Services peu couverts par la concurrence : {gaps.join(', ')}
-                    </p>
-                </motion.div>
-            )}
-        </motion.div>
+                {/* Market Gaps */}
+                {gaps.length > 0 && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="p-3 rounded-lg bg-[#4ade80]/5 border border-[#4ade80]/20"
+                    >
+                        <div className="flex items-center gap-2 text-[#4ade80] text-xs font-medium mb-2">
+                            <AlertCircle className="w-3 h-3" />
+                            Opportunités de différenciation
+                        </div>
+                        <p className="text-xs text-[#a1a1a1]">
+                            Services peu couverts par la concurrence directe : {gaps.join(', ')}
+                        </p>
+                    </motion.div>
+                )}
+            </motion.div>
+        </div>
     );
 }

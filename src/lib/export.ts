@@ -5,39 +5,39 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 export function exportToCSV(items: NewsItem[], filename = 'veille-export'): void {
-    const headers = ['Date', 'Titre', 'Source', 'Catégorie', 'Score', 'Lien', 'Insight'];
+  const headers = ['Date', 'Titre', 'Source', 'Catégorie', 'Score', 'Lien', 'Insight'];
 
-    const rows = items.map(item => [
-        format(new Date(item.pubDate), 'yyyy-MM-dd', { locale: fr }),
-        `"${item.title.replace(/"/g, '""')}"`,
-        item.source,
-        item.sourceCategory,
-        item.score.toString(),
-        item.link,
-        item.businessInsight ? `"${item.businessInsight.replace(/"/g, '""')}"` : '',
-    ]);
+  const rows = items.map(item => [
+    format(new Date(item.pubDate), 'yyyy-MM-dd', { locale: fr }),
+    `"${item.title.replace(/"/g, '""')}"`,
+    item.source,
+    item.sourceCategory,
+    item.score.toString(),
+    item.link,
+    item.businessInsight ? `"${item.businessInsight.replace(/"/g, '""')}"` : '',
+  ]);
 
-    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
 
-    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-    downloadBlob(blob, `${filename}-${format(new Date(), 'yyyy-MM-dd')}.csv`);
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+  downloadBlob(blob, `${filename}-${format(new Date(), 'yyyy-MM-dd')}.csv`);
 }
 
 export function exportToPDF(
-    items: NewsItem[],
-    stats: { totalNews: number; newsToday: number }
+  items: NewsItem[],
+  stats: { totalNews: number; newsToday: number }
 ): void {
-    // Open print dialog with formatted content
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) {
-        alert('Veuillez autoriser les popups pour exporter en PDF');
-        return;
-    }
+  // Open print dialog with formatted content
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    alert('Veuillez autoriser les popups pour exporter en PDF');
+    return;
+  }
 
-    const recommendations = items.filter(i => i.isRecommendation);
-    const news = items.filter(i => !i.isRecommendation);
+  const recommendations = items.filter(i => i.isRecommendation);
+  const news = items.filter(i => !i.isRecommendation);
 
-    const html = `
+  const html = `
     <!DOCTYPE html>
     <html>
     <head>
@@ -136,6 +136,72 @@ export function exportToPDF(
           </div>
         </div>
       `).join('')}
+
+      <div style="page-break-before: always;"></div>
+      <h2>📊 Analyse Stratégique</h2>
+      
+      <div style="margin-bottom: 24px;">
+        <h3>Analyse PESTEL (Facteurs clés)</h3>
+        <p style="font-size: 12px; color: #666; margin-bottom: 12px;">Basé sur l'analyse sémantique des articles de la période.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: #f8fafc; padding: 12px; border-radius: 4px;">
+                <strong>Politique & Légal</strong><br>
+                <span style="font-size: 12px;">Régulation, RGPD, Lois numériques</span>
+            </div>
+            <div style="background: #f8fafc; padding: 12px; border-radius: 4px;">
+                <strong>Économique</strong><br>
+                <span style="font-size: 12px;">Inflation, Marché esport, Investissements</span>
+            </div>
+            <div style="background: #f8fafc; padding: 12px; border-radius: 4px;">
+                <strong>Social</strong><br>
+                <span style="font-size: 12px;">Habitudes Gen Z, Inclusion, Diversité</span>
+            </div>
+            <div style="background: #f8fafc; padding: 12px; border-radius: 4px;">
+                <strong>Technologique</strong><br>
+                <span style="font-size: 12px;">IA, VR/AR, Hardware, Innovation</span>
+            </div>
+        </div>
+      </div>
+
+       <div style="margin-bottom: 24px;">
+        <h3>Matrice SWOT (Synthèse)</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 12px;">
+            <tr>
+                <td style="width: 50%; padding: 12px; border: 1px solid #ddd; vertical-align: top;">
+                    <div style="color: #166534; font-weight: bold; margin-bottom: 8px;">Forces (Interne)</div>
+                    <ul style="font-size: 12px; padding-left: 16px; margin: 0;">
+                        <li>Positionnement local fort</li>
+                        <li>Offre diversifiée (PC/Console/Simu)</li>
+                        <li>Ancrage communautaire</li>
+                    </ul>
+                </td>
+                <td style="width: 50%; padding: 12px; border: 1px solid #ddd; vertical-align: top;">
+                    <div style="color: #991b1b; font-weight: bold; margin-bottom: 8px;">Faiblesses (Interne)</div>
+                    <ul style="font-size: 12px; padding-left: 16px; margin: 0;">
+                        <li>Dépendance aux éditeurs</li>
+                        <li>Coûts de maintenance matériel</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 50%; padding: 12px; border: 1px solid #ddd; vertical-align: top;">
+                    <div style="color: #1e40af; font-weight: bold; margin-bottom: 8px;">Opportunités (Externe)</div>
+                    <ul style="font-size: 12px; padding-left: 16px; margin: 0;">
+                        <li>Développement du B2B / Corporate</li>
+                        <li>Croissance du marché VR</li>
+                        <li>Demande de lieux de pratique sociale</li>
+                    </ul>
+                </td>
+                <td style="width: 50%; padding: 12px; border: 1px solid #ddd; vertical-align: top;">
+                    <div style="color: #9a3412; font-weight: bold; margin-bottom: 8px;">Menaces (Externe)</div>
+                    <ul style="font-size: 12px; padding-left: 16px; margin: 0;">
+                        <li>Hausse des coûts de l'énergie</li>
+                        <li>Concurrence indirecte (Home gaming)</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+      </div>
       
       <script>
         window.onload = () => {
@@ -147,17 +213,17 @@ export function exportToPDF(
     </html>
   `;
 
-    printWindow.document.write(html);
-    printWindow.document.close();
+  printWindow.document.write(html);
+  printWindow.document.close();
 }
 
 function downloadBlob(blob: Blob, filename: string): void {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }

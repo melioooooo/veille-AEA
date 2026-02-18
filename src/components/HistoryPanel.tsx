@@ -5,10 +5,11 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Calendar, ChevronRight, Loader2, AlertCircle } from 'lucide-react';
+import { Calendar, ChevronRight, Loader2, AlertCircle, Download, FileText, FileSpreadsheet } from 'lucide-react';
 import { NewsItem, DashboardStats } from '@/lib/types';
 import RecommendationCard from './RecommendationCard';
 import StatsGrid from './StatsGrid';
+import { exportToCSV, exportToPDF } from '@/lib/export';
 
 interface HistoryData {
     recommendations: NewsItem[];
@@ -142,11 +143,28 @@ export default function HistoryPanel() {
                             animate={{ opacity: 1, y: 0 }}
                             className="space-y-6"
                         >
-                            {/* Header for the historical view */}
                             <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-bold text-white">
                                     Rapport du {formatDate(selectedDate)}
                                 </h2>
+                                <div className="flex items-center gap-2">
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={() => exportToPDF(historyData.recommendations, historyData.stats, selectedDate)}
+                                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#d4a574]/10 text-[#d4a574] text-xs font-medium hover:bg-[#d4a574]/20 transition-colors"
+                                    >
+                                        <FileText className="w-3.5 h-3.5" /> PDF
+                                    </motion.button>
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={() => exportToCSV(historyData.recommendations, 'veille-historique', selectedDate)}
+                                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#d4a574]/10 text-[#d4a574] text-xs font-medium hover:bg-[#d4a574]/20 transition-colors"
+                                    >
+                                        <FileSpreadsheet className="w-3.5 h-3.5" /> CSV
+                                    </motion.button>
+                                </div>
                             </div>
 
                             {/* Stats Snapshot */}

@@ -4,7 +4,7 @@ import { NewsItem } from './types';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
-export function exportToCSV(items: NewsItem[], filename = 'veille-export'): void {
+export function exportToCSV(items: NewsItem[], filename = 'veille-export', date?: string): void {
   const headers = ['Date', 'Titre', 'Source', 'Catégorie', 'Score', 'Lien', 'Insight'];
 
   const rows = items.map(item => [
@@ -20,12 +20,14 @@ export function exportToCSV(items: NewsItem[], filename = 'veille-export'): void
   const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
 
   const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-  downloadBlob(blob, `${filename}-${format(new Date(), 'yyyy-MM-dd')}.csv`);
+  const exportDate = date ? new Date(date) : new Date();
+  downloadBlob(blob, `${filename}-${format(exportDate, 'yyyy-MM-dd')}.csv`);
 }
 
 export function exportToPDF(
   items: NewsItem[],
-  stats: { totalNews: number; newsToday: number }
+  stats: { totalNews: number; newsToday: number },
+  date?: string
 ): void {
   // Open print dialog with formatted content
   const printWindow = window.open('', '_blank');
@@ -42,7 +44,7 @@ export function exportToPDF(
     <html>
     <head>
       <meta charset="utf-8">
-      <title>Veille Stratégique - ${format(new Date(), 'dd MMMM yyyy', { locale: fr })}</title>
+      <title>Veille Stratégique - ${format(date ? new Date(date) : new Date(), 'dd MMMM yyyy', { locale: fr })}</title>
       <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -88,7 +90,7 @@ export function exportToPDF(
     </head>
     <body>
       <h1>📊 Veille Stratégique</h1>
-      <p class="subtitle">Alsace Esport Arena • ${format(new Date(), 'EEEE dd MMMM yyyy', { locale: fr })}</p>
+      <p class="subtitle">Alsace Esport Arena • ${format(date ? new Date(date) : new Date(), 'EEEE dd MMMM yyyy', { locale: fr })}</p>
       
       <div class="stats">
         <div class="stat">

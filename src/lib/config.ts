@@ -33,6 +33,38 @@ export const NEWS_SOURCES: NewsSource[] = [
         category: 'business',
         enabled: true,
     },
+    // NEW: Esport data & viewership analytics
+    {
+        id: 'esports-charts',
+        name: 'Esports Charts',
+        url: 'https://escharts.com/blog/rss',
+        category: 'business',
+        enabled: true,
+    },
+    // NEW: Esport news business-oriented
+    {
+        id: 'esports-net',
+        name: 'Esports.net',
+        url: 'https://www.esports.net/news/feed/',
+        category: 'business',
+        enabled: true,
+    },
+    // NEW: Data-driven esport tech & infrastructure
+    {
+        id: 'grid-esports',
+        name: 'GRID Esports',
+        url: 'https://grid.gg/blog/rss',
+        category: 'business',
+        enabled: true,
+    },
+    // NEW: Startup, levées de fonds gaming
+    {
+        id: 'techcrunch-gaming',
+        name: 'TechCrunch Gaming',
+        url: 'https://techcrunch.com/category/gaming/feed/',
+        category: 'business',
+        enabled: true,
+    },
 
     // === TECHNOLOGY & INNOVATION ===
     {
@@ -53,6 +85,14 @@ export const NEWS_SOURCES: NewsSource[] = [
         id: 'ars-technica-gaming',
         name: 'Ars Technica Gaming',
         url: 'https://feeds.arstechnica.com/arstechnica/gaming',
+        category: 'tech',
+        enabled: true,
+    },
+    // NEW: Innovation & tendances tech gaming
+    {
+        id: 'wired-gaming',
+        name: 'Wired Gaming',
+        url: 'https://www.wired.com/feed/tag/gaming/latest/rss',
         category: 'tech',
         enabled: true,
     },
@@ -79,12 +119,13 @@ export const NEWS_SOURCES: NewsSource[] = [
         category: 'industry',
         enabled: true,
     },
+    // DISABLED: Very high volume, mostly consumer content (reviews, guides)
     {
         id: 'kotaku',
         name: 'Kotaku',
         url: 'https://kotaku.com/rss',
         category: 'industry',
-        enabled: true,
+        enabled: false,
     },
     {
         id: 'gamekult',
@@ -93,19 +134,21 @@ export const NEWS_SOURCES: NewsSource[] = [
         category: 'industry',
         enabled: true,
     },
+    // DISABLED: Very high volume, mostly consumer content
     {
         id: 'ign',
         name: 'IGN',
         url: 'https://feeds.feedburner.com/ign/all',
         category: 'industry',
-        enabled: true,
+        enabled: false,
     },
+    // DISABLED: Very high volume, mostly consumer content
     {
         id: 'gamespot',
         name: 'GameSpot',
         url: 'https://www.gamespot.com/feeds/mashup/',
         category: 'industry',
-        enabled: true,
+        enabled: false,
     },
     {
         id: 'pcgamer',
@@ -121,12 +164,13 @@ export const NEWS_SOURCES: NewsSource[] = [
         category: 'industry',
         enabled: true,
     },
+    // DISABLED: Mostly indie PC gaming, little esport relevance
     {
         id: 'rockpapershotgun',
         name: 'Rock Paper Shotgun',
         url: 'https://www.rockpapershotgun.com/feed',
         category: 'industry',
-        enabled: true,
+        enabled: false,
     },
 
     // === FRENCH SOURCES ===
@@ -142,6 +186,40 @@ export const NEWS_SOURCES: NewsSource[] = [
         name: 'Frandroid',
         url: 'https://www.frandroid.com/feed',
         category: 'tech',
+        enabled: true,
+    },
+    // NEW: Seul média FR 100% esport business
+    {
+        id: '1pvfr',
+        name: '1pv.fr',
+        url: 'https://www.1pv.fr/feed/',
+        category: 'business',
+        enabled: true,
+    },
+    // NEW: Gros média FR esport — compétitions, transferts, scène FR
+    {
+        id: 'millenium',
+        name: 'Millenium',
+        url: 'https://www.millenium.org/rss/feed.xml',
+        category: 'industry',
+        enabled: true,
+    },
+
+    // === STREAMING & MEDIA DATA ===
+    // NEW: Viewership analytics pour streaming & esport
+    {
+        id: 'streamhatchet',
+        name: 'Stream Hatchet',
+        url: 'https://streamhatchet.com/feed/',
+        category: 'business',
+        enabled: true,
+    },
+    // NEW: Market intelligence gaming global (Newzoo)
+    {
+        id: 'newzoo',
+        name: 'Newzoo',
+        url: 'https://newzoo.com/resources/blog/feed',
+        category: 'business',
         enabled: true,
     },
 ];

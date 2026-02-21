@@ -58,7 +58,7 @@ export default function NewsFeed({ news }: NewsFeedProps) {
                 stiffness: 400,
                 damping: 30,
             }}
-            className="card p-5"
+            className="card p-3 sm:p-5"
         >
             <motion.div
                 className="flex items-center gap-2 mb-4"
@@ -88,7 +88,7 @@ export default function NewsFeed({ news }: NewsFeedProps) {
                 variants={container}
                 initial="hidden"
                 animate="show"
-                className="space-y-1 max-h-[600px] overflow-y-auto pr-2"
+                className="space-y-1 max-h-[70vh] overflow-y-auto pr-1 sm:pr-2"
             >
                 {feedNews.map((newsItem) => {
                     const formattedDate = (() => {

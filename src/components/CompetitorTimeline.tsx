@@ -90,7 +90,7 @@ export default function CompetitorTimeline({ competitors, events, news }: Compet
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring" as const, stiffness: 400, damping: 30 }}
-            className="card p-5"
+            className="card p-3 sm:p-5"
         >
             <div className="flex items-center gap-2 mb-4">
                 <motion.div

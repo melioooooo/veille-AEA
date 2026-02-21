@@ -55,7 +55,7 @@ export default function CompetitorsPanel({ competitors }: CompetitorsPanelProps)
                 damping: 30,
                 delay: 0.15
             }}
-            className="card p-5"
+            className="card p-3 sm:p-5"
         >
             <motion.div
                 className="flex items-center gap-2 mb-4"

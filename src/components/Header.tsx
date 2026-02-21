@@ -20,7 +20,7 @@ export default function Header({ lastUpdate, isLoading, onRefresh, sourcesCount 
                 stiffness: 400,
                 damping: 30,
             }}
-            className="flex items-center justify-between py-6 mb-8 border-b border-[rgba(255,255,255,0.06)]"
+            className="flex items-center justify-between py-4 sm:py-6 mb-4 sm:mb-8 border-b border-[rgba(255,255,255,0.06)]"
         >
             <div className="flex items-center gap-3">
                 <motion.div
@@ -65,7 +65,7 @@ export default function Header({ lastUpdate, isLoading, onRefresh, sourcesCount 
                 </motion.div>
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 sm:gap-6">
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -113,7 +113,7 @@ export default function Header({ lastUpdate, isLoading, onRefresh, sourcesCount 
                     >
                         <RefreshCw className="w-3.5 h-3.5" />
                     </motion.div>
-                    <span>Actualiser</span>
+                    <span className="hidden sm:inline">Actualiser</span>
                 </motion.button>
             </div>
         </motion.header>

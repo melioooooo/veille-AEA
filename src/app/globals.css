@@ -414,3 +414,54 @@ body {
   background: var(--accent-muted);
   color: var(--text-primary);
 }
+
+/* ========== Mobile Responsive ========== */
+
+/* Horizontal scroll container (tabs, date pills) */
+.scroll-x-mobile {
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scroll-x-mobile::-webkit-scrollbar {
+  display: none;
+}
+
+/* Safe area padding for notched devices */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.safe-area-x {
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+}
+
+/* Hide custom scrollbar on touch devices, use native */
+@media (hover: none) and (pointer: coarse) {
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  /* Ensure minimum touch target size */
+  button,
+  a,
+  [role="button"] {
+    min-height: 36px;
+  }
+}
+
+/* Prevent text from being too small on mobile */
+@media (max-width: 640px) {
+  .card {
+    border-radius: 10px;
+  }
+}

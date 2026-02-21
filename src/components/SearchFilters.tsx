@@ -76,7 +76,7 @@ export default function SearchFilters({
                         placeholder="Rechercher dans les actualités..."
                         value={filters.search}
                         onChange={(e) => updateFilter('search', e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 bg-[#0a0a0a] border border-[rgba(255,255,255,0.06)] rounded-lg text-sm placeholder:text-[#666] focus:outline-none focus:border-[#d4a574]/50 transition-colors"
+                        className="w-full pl-10 pr-4 py-2.5 bg-[#0a0a0a] border border-[rgba(255,255,255,0.06)] rounded-lg text-sm placeholder:text-[#666] focus:outline-none focus:border-[#d4a574]/50 transition-colors text-[16px] sm:text-sm"
                     />
                     {filters.search && (
                         <motion.button
@@ -100,7 +100,7 @@ export default function SearchFilters({
                         }`}
                 >
                     <Filter className="w-4 h-4" />
-                    <span>Filtres</span>
+                    <span className="hidden sm:inline">Filtres</span>
                     {activeFiltersCount > 0 && (
                         <span className="px-1.5 py-0.5 bg-[#d4a574] text-black text-[10px] rounded-full font-medium">
                             {activeFiltersCount}

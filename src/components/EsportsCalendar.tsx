@@ -145,7 +145,7 @@ export default function EsportsCalendar({ events }: EsportsCalendarProps) {
                 stiffness: 400,
                 damping: 30,
             }}
-            className="card p-5"
+            className="card p-3 sm:p-5"
         >
             <motion.div
                 className="flex items-center justify-between mb-4"
@@ -210,7 +210,7 @@ export default function EsportsCalendar({ events }: EsportsCalendarProps) {
             </motion.div>
 
             {/* Events */}
-            <div className="space-y-1 max-h-[500px] overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-[60vh] sm:max-h-[500px] overflow-y-auto pr-1">
                 {viewMode === 'month' ? (
                     Object.entries(eventsByMonth)
                         .sort(([a], [b]) => a.localeCompare(b))

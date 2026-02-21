@@ -73,7 +73,7 @@ export default function StatsGrid({ stats }: StatsGridProps) {
     ];
 
     return (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 mb-6 sm:mb-8">
             {statCards.map((stat, index) => (
                 <motion.div
                     key={stat.label}
@@ -85,7 +85,7 @@ export default function StatsGrid({ stats }: StatsGridProps) {
                         y: -2,
                         transition: { type: "spring", stiffness: 400 }
                     }}
-                    className="card p-4"
+                    className="card p-3 sm:p-4"
                 >
                     <div className="flex items-center gap-3">
                         <motion.div
@@ -107,7 +107,7 @@ export default function StatsGrid({ stats }: StatsGridProps) {
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: index * 0.08 + 0.15 }}
-                                className="text-xl font-semibold tracking-tight"
+                                className="text-lg sm:text-xl font-semibold tracking-tight"
                             >
                                 {stat.value}
                             </motion.p>

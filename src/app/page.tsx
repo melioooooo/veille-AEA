@@ -232,10 +232,10 @@ export default function DashboardPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen p-6 max-w-7xl mx-auto"
+      className="min-h-screen p-3 sm:p-6 max-w-7xl mx-auto safe-area-x"
     >
       {/* Header with extra actions */}
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-2">
         <Header
           lastUpdate={formatLastUpdate(data.stats.lastUpdate)}
           isLoading={isLoading}
@@ -243,7 +243,7 @@ export default function DashboardPage() {
           sourcesCount={data.sources.length}
         />
 
-        <div className="flex items-center gap-2 mt-6">
+        <div className="flex items-center gap-2 sm:mt-6">
           <ThemeToggle />
 
           {/* Bookmarks */}
@@ -334,22 +334,22 @@ export default function DashboardPage() {
 
       {/* Tab Navigation */}
       <LayoutGroup>
-        <div className="flex items-center gap-1 mb-6 border-b border-[rgba(255,255,255,0.06)]">
+        <div className="scroll-x-mobile gap-1 mb-4 sm:mb-6 border-b border-[rgba(255,255,255,0.06)]">
           {tabs.map((tab) => (
             <motion.button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="relative px-4 py-3 text-sm font-medium"
+              className="relative px-3 sm:px-4 py-3 text-sm font-medium whitespace-nowrap shrink-0"
               whileHover={{ backgroundColor: 'rgba(255,255,255,0.02)' }}
               whileTap={{ scale: 0.98 }}
             >
               <motion.span
                 animate={{ color: activeTab === tab.id ? '#fafafa' : '#666' }}
                 transition={{ duration: 0.2 }}
-                className="flex items-center gap-2"
+                className="flex items-center gap-1.5 sm:gap-2"
               >
                 <tab.icon className="w-4 h-4" />
-                {tab.label}
+                <span className="hidden xs:inline sm:inline">{tab.label}</span>
               </motion.span>
 
               {activeTab === tab.id && (
@@ -475,7 +475,7 @@ export default function DashboardPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="mt-12 pt-6 text-center text-xs text-[#666] border-t border-[rgba(255,255,255,0.06)]"
+        className="mt-8 sm:mt-12 pt-4 sm:pt-6 pb-4 text-center text-xs text-[#666] border-t border-[rgba(255,255,255,0.06)] safe-area-bottom"
       >
         <p>
           {data.sources.length} sources • {COMPETITORS.length} concurrents • {ESPORTS_EVENTS_2026.length} événements

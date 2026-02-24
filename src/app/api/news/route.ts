@@ -38,7 +38,8 @@ export async function GET() {
         // unless we want to ensure it's saved before returning
         try {
             const { saveDailySnapshot } = await import('@/lib/db');
-            await saveDailySnapshot(recommendations, stats);
+            const topNews = news.filter(item => !item.isRecommendation).slice(0, 30);
+            await saveDailySnapshot(recommendations, topNews, stats);
         } catch (dbError) {
             console.error('Failed to save history snapshot:', dbError);
             // Non-fatal error, continue to return current data

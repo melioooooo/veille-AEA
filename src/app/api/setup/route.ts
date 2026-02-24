@@ -12,8 +12,15 @@ export async function GET() {
                 date DATE UNIQUE NOT NULL,
                 items JSONB NOT NULL,
                 stats JSONB NOT NULL,
+                news JSONB DEFAULT '[]'::jsonb,
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             );
+        `;
+
+        // Migration: add news column if it doesn't exist (for existing databases)
+        await sql`
+            ALTER TABLE recommendations_history 
+            ADD COLUMN IF NOT EXISTS news JSONB DEFAULT '[]'::jsonb;
         `;
 
         return NextResponse.json({

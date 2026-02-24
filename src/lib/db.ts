@@ -18,19 +18,17 @@ export async function getHistoryDates() {
 
 export async function getHistoryByDate(date: string) {
     try {
-        // Ensure date is in YYYY-MM-DD format
-        // Postgres DATE type can be compared directly with string 'YYYY-MM-DD'
         const { rows } = await sql`
-            SELECT items, stats FROM recommendations_history 
+            SELECT items, stats, news FROM recommendations_history 
             WHERE date = ${date}::date
             LIMIT 1;
         `;
         if (rows.length > 0) {
             return {
-                news: [], // We might not store full news history, only recos
+                news: (rows[0].news as NewsItem[]) || [],
                 recommendations: rows[0].items as NewsItem[],
                 stats: rows[0].stats as DashboardStats,
-                sources: [] // Sources are static/config based usually
+                sources: []
             };
         }
         return null;
@@ -40,17 +38,18 @@ export async function getHistoryByDate(date: string) {
     }
 }
 
-export async function saveDailySnapshot(items: NewsItem[], stats: DashboardStats) {
+export async function saveDailySnapshot(items: NewsItem[], news: NewsItem[], stats: DashboardStats) {
     try {
         const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
         await sql`
-            INSERT INTO recommendations_history (date, items, stats)
-            VALUES (${today}, ${JSON.stringify(items)}, ${JSON.stringify(stats)})
+            INSERT INTO recommendations_history (date, items, stats, news)
+            VALUES (${today}, ${JSON.stringify(items)}, ${JSON.stringify(stats)}, ${JSON.stringify(news)})
             ON CONFLICT (date) 
             DO UPDATE SET 
                 items = ${JSON.stringify(items)}, 
-                stats = ${JSON.stringify(stats)};
+                stats = ${JSON.stringify(stats)},
+                news = ${JSON.stringify(news)};
         `;
         console.log(`Saved snapshot for ${today}`);
         return true;
@@ -59,3 +58,4 @@ export async function saveDailySnapshot(items: NewsItem[], stats: DashboardStats
         return false;
     }
 }
+

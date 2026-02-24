@@ -46,8 +46,9 @@ export async function GET(request: Request) {
             lastUpdate: new Date().toISOString(),
         };
 
-        // Save daily snapshot
-        const success = await saveDailySnapshot(recommendations, stats);
+        // Save daily snapshot (recommendations + top news for PDF export)
+        const topNews = news.filter(item => !item.isRecommendation).slice(0, 30);
+        const success = await saveDailySnapshot(recommendations, topNews, stats);
 
         if (success) {
             console.log('CRON job completed successfully.');

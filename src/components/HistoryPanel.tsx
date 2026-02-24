@@ -13,6 +13,7 @@ import { exportToCSV, exportToPDF } from '@/lib/export';
 
 interface HistoryData {
     recommendations: NewsItem[];
+    news: NewsItem[];
     stats: DashboardStats;
 }
 
@@ -149,7 +150,7 @@ export default function HistoryPanel() {
                                     <motion.button
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
-                                        onClick={() => exportToPDF(historyData.recommendations, historyData.stats, selectedDate)}
+                                        onClick={() => exportToPDF([...historyData.recommendations, ...historyData.news], historyData.stats, selectedDate)}
                                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#d4a574]/10 text-[#d4a574] text-xs font-medium hover:bg-[#d4a574]/20 transition-colors"
                                     >
                                         <FileText className="w-3.5 h-3.5" /> PDF
@@ -157,7 +158,7 @@ export default function HistoryPanel() {
                                     <motion.button
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
-                                        onClick={() => exportToCSV(historyData.recommendations, 'veille-historique', selectedDate)}
+                                        onClick={() => exportToCSV([...historyData.recommendations, ...historyData.news], 'veille-historique', selectedDate)}
                                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#d4a574]/10 text-[#d4a574] text-xs font-medium hover:bg-[#d4a574]/20 transition-colors"
                                     >
                                         <FileSpreadsheet className="w-3.5 h-3.5" /> CSV

@@ -47,7 +47,7 @@ function calculateScore(title: string, description: string, category: NewsSource
 }
 
 // Generate business justification - WHY this is relevant for Alsace Esport Arena
-function generateBusinessJustification(title: string, description: string): { insight: string; justification: string } {
+function generateBusinessJustification(title: string, description: string, sourceCategory: string): { insight: string; justification: string } {
     const text = `${title} ${description}`.toLowerCase();
 
     // Venue & Infrastructure
@@ -82,8 +82,11 @@ function generateBusinessJustification(title: string, description: string): { in
         };
     }
 
-    // Esport Competitions
-    if (text.includes('major') || text.includes('championship') || text.includes('roster') || text.includes('qualifier') || text.includes('playoffs') || text.includes('grand final') || text.includes('cs2') || text.includes('counter-strike') || text.includes('valorant') || text.includes('vct') || text.includes('lec') || text.includes('lfl') || text.includes('worlds')) {
+    // Esport Competitions — context-aware: only trigger if source is esport category,
+    // or if text contains specific esport game/league terms (not ambiguous words like 'worlds' or 'major' alone)
+    const esportSpecificTerms = ['cs2', 'counter-strike', 'valorant', 'vct', 'lec', 'lfl', 'roster', 'qualifier', 'playoffs', 'grand final'];
+    const esportHits = esportSpecificTerms.filter(term => text.includes(term)).length;
+    if (sourceCategory === 'esport' || esportHits >= 2) {
         return {
             insight: "Programmation esport",
             justification: "Compétition ou actualité esport à suivre pour organiser des watch parties, tournois locaux ou événements thématiques à l'Arena. Opportunité de fédérer la communauté locale autour des grandes compétitions."
@@ -190,7 +193,7 @@ async function fetchFromSource(source: NewsSource): Promise<NewsItem[]> {
             }
 
             const score = calculateScore(title, description, source.category);
-            const { insight, justification } = generateBusinessJustification(title, description);
+            const { insight, justification } = generateBusinessJustification(title, description, source.category);
 
             items.push({
                 id: generateId(title, source.id),
@@ -242,22 +245,51 @@ export async function fetchAllNews(): Promise<NewsItem[]> {
     // Sort by score (highest first)
     allItems.sort((a, b) => b.score - a.score);
 
-    // Mark top items from this week as recommendations
-    let recommendationsCount = 0;
+    // Category-balanced recommendations: pick top items per thematic group
+    // Each group gets up to 2 recommendations, total capped by config
+    const recoGroups: Record<string, string[]> = {
+        business: ['business'],
+        esport: ['esport'],
+        tech: ['tech'],
+        industry: ['industry', 'regulation', 'local'],
+    };
 
+    const groupCounts: Record<string, number> = {};
+    const maxPerGroup = 2;
+    let totalRecos = 0;
+    const maxTotal = DASHBOARD_CONFIG.recommendationsPerWeek + 1; // allow 6 total for better coverage
+
+    // First pass: recent items only (this week)
     for (const item of allItems) {
-        if (isWithinLastWeek(item.pubDate) && recommendationsCount < DASHBOARD_CONFIG.recommendationsPerWeek) {
+        if (totalRecos >= maxTotal) break;
+        if (!isWithinLastWeek(item.pubDate)) continue;
+
+        // Find which group this item belongs to
+        const group = Object.entries(recoGroups).find(
+            ([, cats]) => cats.includes(item.sourceCategory)
+        )?.[0] || 'industry';
+
+        if ((groupCounts[group] || 0) < maxPerGroup) {
             item.isRecommendation = true;
-            recommendationsCount++;
+            groupCounts[group] = (groupCounts[group] || 0) + 1;
+            totalRecos++;
         }
     }
 
-    // If we don't have enough recommendations from this week, use top scoring items
-    if (recommendationsCount < DASHBOARD_CONFIG.recommendationsPerWeek) {
+    // Second pass: fill remaining slots from any category if needed
+    if (totalRecos < maxTotal) {
         for (const item of allItems) {
-            if (!item.isRecommendation && recommendationsCount < DASHBOARD_CONFIG.recommendationsPerWeek) {
+            if (totalRecos >= maxTotal) break;
+            if (item.isRecommendation) continue;
+
+            const group = Object.entries(recoGroups).find(
+                ([, cats]) => cats.includes(item.sourceCategory)
+            )?.[0] || 'industry';
+
+            if ((groupCounts[group] || 0) < maxPerGroup) {
                 item.isRecommendation = true;
-                recommendationsCount++;
+                groupCounts[group] = (groupCounts[group] || 0) + 1;
+                totalRecos++;
             }
         }
     }

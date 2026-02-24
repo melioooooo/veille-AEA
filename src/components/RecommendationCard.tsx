@@ -19,6 +19,7 @@ export default function RecommendationCard({ item, index }: RecommendationCardPr
             tech: 'cat-tech',
             regulation: 'cat-regulation',
             local: 'cat-local',
+            esport: 'cat-esport',
         };
         return classes[category] || 'cat-industry';
     };
@@ -140,8 +141,8 @@ export default function RecommendationCard({ item, index }: RecommendationCardPr
                 <motion.span
                     whileHover={{ scale: 1.1 }}
                     className={`text-xs font-medium ${item.score >= 30 ? 'text-[#4ade80]' :
-                            item.score >= 20 ? 'text-[#fbbf24]' :
-                                'text-[#666]'
+                        item.score >= 20 ? 'text-[#fbbf24]' :
+                            'text-[#666]'
                         }`}
                 >
                     Score {item.score}

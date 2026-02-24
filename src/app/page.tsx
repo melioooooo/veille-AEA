@@ -380,18 +380,53 @@ export default function DashboardPage() {
               availableCategories={availableCategories}
             />
 
-            {/* Recommendations */}
+            {/* Recommendations — grouped by theme */}
             <section className="mb-8">
               <div className="flex items-center gap-2 mb-4">
                 <h2 className="text-sm font-medium">Recommandations</h2>
                 <span className="badge badge-accent">{filteredRecommendations.length}</span>
               </div>
               {filteredRecommendations.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredRecommendations.map((item, index) => (
-                    <RecommendationCard key={item.id} item={item} index={index} />
-                  ))}
-                </div>
+                (() => {
+                  const groupConfig: { key: string; label: string; emoji: string; categories: string[] }[] = [
+                    { key: 'business', label: 'Stratégie business', emoji: '🧠', categories: ['business'] },
+                    { key: 'esport', label: 'Programmation esport', emoji: '🎮', categories: ['esport'] },
+                    { key: 'tech', label: 'Veille techno', emoji: '💡', categories: ['tech'] },
+                    { key: 'industry', label: 'Tendances industrie', emoji: '📰', categories: ['industry', 'regulation', 'local'] },
+                  ];
+
+                  const groups = groupConfig
+                    .map(g => ({
+                      ...g,
+                      items: filteredRecommendations.filter(item =>
+                        g.categories.includes(item.sourceCategory)
+                      ),
+                    }))
+                    .filter(g => g.items.length > 0);
+
+                  let globalIndex = 0;
+
+                  return (
+                    <div className="space-y-6">
+                      {groups.map(group => (
+                        <div key={group.key}>
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="text-sm">{group.emoji}</span>
+                            <h3 className="text-xs font-medium text-[#a1a1a1] uppercase tracking-wider">
+                              {group.label}
+                            </h3>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {group.items.map((item) => {
+                              const idx = globalIndex++;
+                              return <RecommendationCard key={item.id} item={item} index={idx} />;
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()
               ) : (
                 <p className="text-sm text-[#666] py-4">Aucune recommandation trouvée</p>
               )}

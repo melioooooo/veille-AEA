@@ -42,6 +42,7 @@ export default function NewsFeed({ news }: NewsFeedProps) {
             tech: 'cat-tech',
             regulation: 'cat-regulation',
             local: 'cat-local',
+            esport: 'cat-esport',
         };
         return classes[category] || 'cat-industry';
     };

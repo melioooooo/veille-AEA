@@ -82,6 +82,14 @@ function generateBusinessJustification(title: string, description: string): { in
         };
     }
 
+    // Esport Competitions
+    if (text.includes('major') || text.includes('championship') || text.includes('roster') || text.includes('qualifier') || text.includes('playoffs') || text.includes('grand final') || text.includes('cs2') || text.includes('counter-strike') || text.includes('valorant') || text.includes('vct') || text.includes('lec') || text.includes('lfl') || text.includes('worlds')) {
+        return {
+            insight: "Programmation esport",
+            justification: "Compétition ou actualité esport à suivre pour organiser des watch parties, tournois locaux ou événements thématiques à l'Arena. Opportunité de fédérer la communauté locale autour des grandes compétitions."
+        };
+    }
+
     // Tournament & Events
     if (text.includes('tournament') || text.includes('tournoi') || text.includes('event') || text.includes('championship') || text.includes('league')) {
         return {

@@ -242,6 +242,11 @@ body {
   color: #f87171;
 }
 
+.cat-esport {
+  background: rgba(251, 146, 60, 0.12);
+  color: #fb923c;
+}
+
 /* ========== Scrollbar ========== */
 ::-webkit-scrollbar {
   width: 8px;

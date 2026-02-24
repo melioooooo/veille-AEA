@@ -4,7 +4,7 @@ export interface NewsSource {
   id: string;
   name: string;
   url: string;
-  category: 'industry' | 'regulation' | 'tech' | 'business' | 'local';
+  category: 'industry' | 'regulation' | 'tech' | 'business' | 'local' | 'esport';
   enabled: boolean;
 }
 

@@ -97,21 +97,51 @@ export const NEWS_SOURCES: NewsSource[] = [
         enabled: true,
     },
 
-    // === ESPORT NEWS & COVERAGE ===
+    // === ESPORT COMPÉTITIONS ===
+    {
+        id: 'hltv',
+        name: 'HLTV',
+        url: 'https://www.hltv.org/rss/news',
+        category: 'esport',
+        enabled: true,
+    },
+    {
+        id: 'vlr-gg',
+        name: 'VLR.gg',
+        url: 'https://vlr.gg/rss',
+        category: 'esport',
+        enabled: true,
+    },
+    {
+        id: 'estnn',
+        name: 'ESTNN',
+        url: 'https://estnn.com/feed/',
+        category: 'esport',
+        enabled: true,
+    },
+    {
+        id: 'win-gg',
+        name: 'WIN.gg',
+        url: 'https://win.gg/feed/',
+        category: 'esport',
+        enabled: true,
+    },
     {
         id: 'dexerto',
         name: 'Dexerto',
         url: 'https://www.dexerto.com/feed/',
-        category: 'industry',
+        category: 'esport',
         enabled: true,
     },
     {
         id: 'dot-esports',
         name: 'Dot Esports',
         url: 'https://dotesports.com/feed',
-        category: 'industry',
+        category: 'esport',
         enabled: true,
     },
+
+    // === ESPORT NEWS & COVERAGE ===
     {
         id: 'polygon',
         name: 'Polygon',
@@ -599,6 +629,36 @@ export const FILTER_CONFIG: FilterConfig = {
         { keyword: 'local esports', weight: 12 },
         { keyword: 'grassroots', weight: 10 },
 
+        // Esport Compétitions
+        { keyword: 'major', weight: 10 },
+        { keyword: 'championship', weight: 10 },
+        { keyword: 'qualifier', weight: 8 },
+        { keyword: 'playoffs', weight: 10 },
+        { keyword: 'grand final', weight: 12 },
+        { keyword: 'roster', weight: 8 },
+        { keyword: 'roster change', weight: 10 },
+        { keyword: 'transfer', weight: 8 },
+        { keyword: 'signed', weight: 6 },
+        { keyword: 'benched', weight: 8 },
+        { keyword: 'standings', weight: 6 },
+        { keyword: 'bracket', weight: 6 },
+        { keyword: 'counter-strike', weight: 10 },
+        { keyword: 'cs2', weight: 10 },
+        { keyword: 'valorant', weight: 10 },
+        { keyword: 'league of legends', weight: 10 },
+        { keyword: 'dota 2', weight: 8 },
+        { keyword: 'champions tour', weight: 10 },
+        { keyword: 'vct', weight: 10 },
+        { keyword: 'blast', weight: 8 },
+        { keyword: 'esl', weight: 8 },
+        { keyword: 'iem', weight: 10 },
+        { keyword: 'pgl', weight: 8 },
+        { keyword: 'worlds', weight: 10 },
+        { keyword: 'msi', weight: 8 },
+        { keyword: 'lec', weight: 10 },
+        { keyword: 'lfl', weight: 12 },
+        { keyword: 'watch party', weight: 15 },
+
         // === PESTEL ANALYSIS KEYWORDS ===
         // Political & Legal
         { keyword: 'loi', weight: 15 },
@@ -650,6 +710,7 @@ export const FILTER_CONFIG: FilterConfig = {
         business: 1.6,
         regulation: 1.5,
         local: 1.4,
+        esport: 1.3,
         tech: 1.2,
         industry: 1.0,
     },

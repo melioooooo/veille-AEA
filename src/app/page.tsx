@@ -25,6 +25,8 @@ import ROICalculator from '@/components/ROICalculator';
 import AlertSettings from '@/components/AlertSettings';
 import ThemeToggle from '@/components/ThemeToggle';
 import HistoryPanel from '@/components/HistoryPanel';
+import PESTELRadar from '@/components/PESTELRadar';
+import SWOTAnalysis from '@/components/SWOTAnalysis';
 
 import { NewsItem, NewsSource, DashboardStats } from '@/lib/types';
 import { COMPETITORS } from '@/lib/config';
@@ -388,19 +390,25 @@ export default function DashboardPage() {
               </div>
               {filteredRecommendations.length > 0 ? (
                 (() => {
-                  const groupConfig: { key: string; label: string; emoji: string; categories: string[] }[] = [
-                    { key: 'business', label: 'Stratégie business', emoji: '🧠', categories: ['business'] },
-                    { key: 'esport', label: 'Programmation esport', emoji: '🎮', categories: ['esport'] },
-                    { key: 'tech', label: 'Veille techno', emoji: '💡', categories: ['tech'] },
-                    { key: 'industry', label: 'Tendances industrie', emoji: '📰', categories: ['industry', 'regulation', 'local'] },
+                  const groupConfig: { key: string; label: string; emoji: string; pestelCategories?: string[]; categories?: string[] }[] = [
+                    { key: 'economique', label: 'Économique', emoji: '📊', pestelCategories: ['economique'] },
+                    { key: 'technologique', label: 'Technologique', emoji: '💡', pestelCategories: ['technologique'] },
+                    { key: 'legal', label: 'Réglementaire & Légal', emoji: '⚖️', pestelCategories: ['legal', 'politique'] },
+                    { key: 'social', label: 'Social & Tendances', emoji: '👥', pestelCategories: ['social'] },
+                    { key: 'environnemental', label: 'Environnemental', emoji: '🌱', pestelCategories: ['environnemental'] },
+                    { key: 'other', label: 'Autres tendances', emoji: '📰' },
                   ];
 
                   const groups = groupConfig
                     .map(g => ({
                       ...g,
-                      items: filteredRecommendations.filter(item =>
-                        g.categories.includes(item.sourceCategory)
-                      ),
+                      items: filteredRecommendations.filter(item => {
+                        if (g.pestelCategories) {
+                          return g.pestelCategories.includes(item.pestelCategory || '');
+                        }
+                        // 'other' group: items that don't match any PESTEL group
+                        return !groupConfig.some(gc => gc.pestelCategories?.includes(item.pestelCategory || ''));
+                      }),
                     }))
                     .filter(g => g.items.length > 0);
 
@@ -479,6 +487,8 @@ export default function DashboardPage() {
             exit="exit"
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <PESTELRadar news={data.news} />
+              <SWOTAnalysis news={data.news} />
               <MarketAnalysis competitors={COMPETITORS} news={data.news} />
               <ROICalculator />
               <div className="lg:col-span-2">

@@ -18,33 +18,29 @@ export default function SWOTAnalysis({ news }: SWOTAnalysisProps) {
             threats: [] as string[],
         };
 
-        // Simplified keyword matching for demonstration
-        // In a real app, this would use more advanced NLP or tagged data
-        const keywords = {
-            strengths: ['croissance', 'succès', 'partenariat', 'innovation', 'leader', 'profit'],
-            weaknesses: ['baisse', 'perte', 'retard', 'fermeture', 'déficit', 'plainte'],
-            opportunities: ['nouveau marché', 'expansion', 'fusions', 'tendance', 'jeunes', 'subvention'],
-            threats: ['régulation', 'taxe', 'concurrence', 'inflation', 'interdiction', 'procès'],
-        };
-
-        const titles = news.map(n => n.title.toLowerCase());
-
-        // Extract customized insights based on news content
-        titles.forEach(title => {
-            if (keywords.strengths.some(k => title.includes(k))) {
-                if (swot.strengths.length < 3) swot.strengths.push(title);
-            } else if (keywords.weaknesses.some(k => title.includes(k))) {
-                if (swot.weaknesses.length < 3) swot.weaknesses.push(title);
-            } else if (keywords.opportunities.some(k => title.includes(k))) {
-                if (swot.opportunities.length < 3) swot.opportunities.push(title);
-            } else if (keywords.threats.some(k => title.includes(k))) {
-                if (swot.threats.length < 3) swot.threats.push(title);
+        // Use backend impactType for opportunities and threats
+        for (const item of news) {
+            const title = item.title;
+            if (item.impactType === 'opportunity' && swot.opportunities.length < 4) {
+                swot.opportunities.push(title);
+            } else if (item.impactType === 'threat' && swot.threats.length < 4) {
+                swot.threats.push(title);
             }
-        });
+        }
 
-        // Fallbacks if no news matches
-        if (swot.strengths.length === 0) swot.strengths = ["Positionnement local fort", "Communauté engagée"];
-        if (swot.weaknesses.length === 0) swot.weaknesses = ["Dépendance aux éditeurs de jeux", "Coûts énergétiques"];
+        // Strengths & Weaknesses are internal factors — curated for AEA
+        swot.strengths = [
+            "Positionnement local fort en Alsace",
+            "Communauté gaming engagée",
+            "Outil de veille automatisé (avantage opérationnel)",
+        ];
+        swot.weaknesses = [
+            "Dépendance aux éditeurs de jeux",
+            "Coûts énergétiques élevés",
+            "Marché local limité en taille",
+        ];
+
+        // Fallbacks if no news data
         if (swot.opportunities.length === 0) swot.opportunities = ["Diversification B2B", "Événementiel d'entreprise"];
         if (swot.threats.length === 0) swot.threats = ["Régulation accrue", "Volatilité du marché esport"];
 

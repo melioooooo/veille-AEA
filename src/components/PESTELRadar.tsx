@@ -20,33 +20,36 @@ export default function PESTELRadar({ news }: PESTELRadarProps) {
             'Légal': 0,
         };
 
-        const keywords = {
-            'Politique': ['politique', 'gouvernement', 'état', 'ministère', 'élection', 'public'],
-            'Économique': ['économie', 'inflation', 'budget', 'financement', 'investisseur', 'marché', 'croissance'],
-            'Social': ['social', 'société', 'jeunes', 'femmes', 'inclusion', 'santé', 'éducation', 'mixité'],
-            'Technologique': ['tech', 'ia', 'ai', 'virtuel', 'web3', 'blockchain', 'innovation', 'logiciel', 'hardware'],
-            'Environnemental': ['écologie', 'vert', 'durable', 'carbone', 'énergie', 'climat', 'planète'],
-            'Légal': ['loi', 'règle', 'juridique', 'droit', 'régulation', 'décret', 'interdiction', 'rgpd'],
+        // Map backend pestelCategory to display labels
+        const categoryMap: Record<string, keyof typeof counts> = {
+            'politique': 'Politique',
+            'economique': 'Économique',
+            'social': 'Social',
+            'technologique': 'Technologique',
+            'environnemental': 'Environnemental',
+            'legal': 'Légal',
         };
 
         news.forEach(item => {
-            const text = (item.title + ' ' + item.description).toLowerCase();
-
-            // Prioritize sourceCategory if it matches directly
-            if (item.sourceCategory === 'tech') counts['Technologique']++;
-            else if (item.sourceCategory === 'business') counts['Économique']++;
-            else if (item.sourceCategory === 'regulation') counts['Légal']++;
-            else {
-                // Keyword matching
-                let matched = false;
+            if (item.pestelCategory && categoryMap[item.pestelCategory]) {
+                counts[categoryMap[item.pestelCategory]]++;
+            } else {
+                // Fallback for old items without pestelCategory
+                const text = (item.title + ' ' + item.description).toLowerCase();
+                const keywords: Record<keyof typeof counts, string[]> = {
+                    'Politique': ['politique', 'gouvernement', 'état', 'ministère', 'subvention'],
+                    'Économique': ['économie', 'marché', 'financement', 'investissement', 'croissance'],
+                    'Social': ['social', 'jeunes', 'inclusion', 'communauté', 'audience'],
+                    'Technologique': ['tech', 'ia', 'ai', 'virtuel', 'innovation', 'hardware'],
+                    'Environnemental': ['écologie', 'durable', 'carbone', 'énergie', 'rse'],
+                    'Légal': ['loi', 'règle', 'juridique', 'régulation', 'décret', 'rgpd'],
+                };
                 for (const [category, words] of Object.entries(keywords)) {
                     if (words.some(w => text.includes(w))) {
                         counts[category as keyof typeof counts]++;
-                        matched = true;
                         break;
                     }
                 }
-                // Default fallback based on general context could go here
             }
         });
 
@@ -86,11 +89,11 @@ export default function PESTELRadar({ news }: PESTELRadarProps) {
                                 animate={{ width: `${Math.max(item.percentage, 5)}%` }} // Min 5% for visibility
                                 transition={{ duration: 1, delay: index * 0.1 }}
                                 className={`h-full rounded-full ${item.category === 'Technologique' ? 'bg-blue-500' :
-                                        item.category === 'Économique' ? 'bg-emerald-500' :
-                                            item.category === 'Légal' ? 'bg-red-500' :
-                                                item.category === 'Social' ? 'bg-yellow-500' :
-                                                    item.category === 'Environnemental' ? 'bg-green-500' :
-                                                        'bg-purple-500'
+                                    item.category === 'Économique' ? 'bg-emerald-500' :
+                                        item.category === 'Légal' ? 'bg-red-500' :
+                                            item.category === 'Social' ? 'bg-yellow-500' :
+                                                item.category === 'Environnemental' ? 'bg-green-500' :
+                                                    'bg-purple-500'
                                     }`}
                             />
                         </div>

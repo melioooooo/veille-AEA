@@ -1,5 +1,11 @@
 // Types for the Strategic Intelligence Dashboard
 
+// PESTEL classification axes
+export type PestelCategory = 'politique' | 'economique' | 'social' | 'technologique' | 'environnemental' | 'legal';
+
+// Impact qualification for strategic decision-making
+export type ImpactType = 'opportunity' | 'threat' | 'neutral';
+
 export interface NewsSource {
   id: string;
   name: string;
@@ -21,6 +27,8 @@ export interface NewsItem {
   tags: string[];
   businessInsight?: string;
   businessJustification?: string; // WHY this is relevant for Alsace Esport Arena
+  pestelCategory?: PestelCategory; // PESTEL axis classification
+  impactType?: ImpactType; // Opportunity, threat, or neutral
 }
 
 export interface DashboardStats {
@@ -33,5 +41,7 @@ export interface DashboardStats {
 export interface FilterConfig {
   blacklist: string[];
   boostKeywords: { keyword: string; weight: number }[];
+  penaltyKeywords: { keyword: string; weight: number }[];
   categoryWeights: Record<string, number>;
+  minimumScoreThreshold: number;
 }

@@ -61,6 +61,14 @@ export default function RecommendationCard({ item, index }: RecommendationCardPr
                     <span className={`badge ${getCategoryClass(item.sourceCategory)}`}>
                         {item.sourceCategory}
                     </span>
+                    {item.impactType && item.impactType !== 'neutral' && (
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${item.impactType === 'opportunity'
+                                ? 'bg-emerald-500/15 text-emerald-400'
+                                : 'bg-red-500/15 text-red-400'
+                            }`}>
+                            {item.impactType === 'opportunity' ? '↗ Opportunité' : '↘ Menace'}
+                        </span>
+                    )}
                     <span className="text-xs text-[#666]">{formattedDate}</span>
                 </motion.div>
                 <motion.div

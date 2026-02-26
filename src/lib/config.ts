@@ -252,6 +252,34 @@ export const NEWS_SOURCES: NewsSource[] = [
         category: 'business',
         enabled: true,
     },
+
+    // === RÉGLEMENTAIRE & INSTITUTIONNEL ===
+    // France Esports — fédération officielle, actualités réglementaires
+    {
+        id: 'france-esports',
+        name: 'France Esports',
+        url: 'https://www.france-esports.org/feed/',
+        category: 'regulation',
+        enabled: true,
+    },
+    // SELL — Syndicat des Éditeurs de Logiciels de Loisirs
+    {
+        id: 'sell-jeu-video',
+        name: 'SELL',
+        url: 'https://www.sell.fr/feed',
+        category: 'regulation',
+        enabled: true,
+    },
+
+    // === MARKETING & COMMUNICATION ESPORT ===
+    // The Esports Observer — stratégies marketing et business esport
+    {
+        id: 'esports-observer',
+        name: 'The Esports Observer',
+        url: 'https://archive.esportsobserver.com/feed/',
+        category: 'business',
+        enabled: true,
+    },
 ];
 
 // ============================================
@@ -496,34 +524,27 @@ export const COMPETITORS: Competitor[] = [
     },
 ];
 
-// ============================================
-// FILTER CONFIGURATION
-// ============================================
 export const FILTER_CONFIG: FilterConfig = {
-    // Terms to completely exclude
-    // Terms to completely exclude
+    // Terms to completely exclude — hard filter
     blacklist: [
+        // Consumer gaming content
         'meltdown',
         'meltdown bar',
         'meltdown bars',
         'fortnite skin',
         'patch notes',
         'tier list',
-        'build guide',
         'tier-list',
+        'build guide',
         'skin reveal',
         'battle pass',
         'season pass',
         'character unlock',
         'cosmetic',
-        // New exclusions for better relevance
         'mod',
         'mods',
         'best mods',
         'nexus mod',
-        'stardew valley',
-        'elden ring',
-        'pokemon',
         'guide',
         'walkthrough',
         'how to',
@@ -541,107 +562,147 @@ export const FILTER_CONFIG: FilterConfig = {
         'steam sale',
         'epic free',
         'twitch drop',
+        'best settings',
+        'gameplay tips',
+        'cheat',
+        'exploit',
+        'glitch',
+        'ranking guide',
+        'tier list update',
+
+        // Traditional sports — NOT esport
+        'hockey',
+        'ice hockey',
+        'football américain',
+        'nfl',
+        'nba',
+        'nhl',
+        'mlb',
+        'baseball',
+        'cricket',
+        'rugby',
+        'tennis',
+        'golf',
+        'boxing',
+        'mma',
+        'ufc',
+        'wrestling',
+        'olympic',
+        'olympics',
+        'jeux olympiques',
+        'premier league',
+        'champions league',
+        'world cup',
+        'coupe du monde',
+        'ligue 1',
+        'bundesliga',
+        'la liga',
+        'serie a',
+        'ballon d\'or',
+
+        // Automobile / Mobilité
+        'conduite autonome',
+        'self-driving',
+        'autonomous driving',
+        'autonomous vehicle',
+        'véhicule électrique',
+        'electric vehicle',
+        'voiture électrique',
+        'tesla model',
+        'waymo',
+        'wayve',
+
+        // Non-gaming tech / lifestyle
+        'recette',
+        'cuisine',
+        'fashion',
+        'real estate',
+        'immobilier',
+        'crypto trading',
+        'nft marketplace',
+        'dating app',
+
+        // Entertainment non-gaming
+        'netflix',
+        'disney+',
+        'hbo',
+        'movie review',
+        'box office',
+
+        // Specific games with no esport scene
+        'stardew valley',
+        'elden ring',
+        'animal crossing',
+        'zelda',
+        'hogwarts legacy',
     ],
 
-    // Keywords that boost relevance score for Alsace Esport Arena business
+    // Keywords that boost relevance score — focused on AEA business environment
     boostKeywords: [
-        // Direct Business Relevance
-        { keyword: 'arena', weight: 20 },
-        { keyword: 'alsace', weight: 25 },
-        { keyword: 'strasbourg', weight: 20 },
-        { keyword: 'gaming center', weight: 18 },
-        { keyword: 'esport venue', weight: 18 },
-        { keyword: 'lan center', weight: 15 },
-        { keyword: 'lan party', weight: 12 },
-        { keyword: 'gaming lounge', weight: 15 },
-        { keyword: 'gaming cafe', weight: 15 },
+        // ===== DIRECT AEA BUSINESS (highest weight) =====
+        { keyword: 'arena', weight: 25 },
+        { keyword: 'alsace', weight: 30 },
+        { keyword: 'strasbourg', weight: 25 },
+        { keyword: 'gaming center', weight: 22 },
+        { keyword: 'gaming centre', weight: 22 },
+        { keyword: 'esport venue', weight: 22 },
+        { keyword: 'lan center', weight: 20 },
+        { keyword: 'lan party', weight: 18 },
+        { keyword: 'gaming lounge', weight: 20 },
+        { keyword: 'gaming cafe', weight: 20 },
+        { keyword: 'gaming bar', weight: 18 },
+        { keyword: 'bar esport', weight: 18 },
+        { keyword: 'salle de jeux', weight: 20 },
+        { keyword: 'espace gaming', weight: 22 },
+        { keyword: 'cybercafé', weight: 18 },
+        { keyword: 'watch party', weight: 20 },
 
-        // Competitor mentions (for competitive intel)
-        { keyword: 'espot', weight: 15 },
-        { keyword: 'vitality', weight: 12 },
-        { keyword: 'v.hive', weight: 15 },
-        { keyword: 'mces', weight: 12 },
-        { keyword: 'lyon esport', weight: 10 },
-        { keyword: 'gaming campus', weight: 10 },
+        // ===== COMPETITOR INTELLIGENCE =====
+        { keyword: 'espot', weight: 18 },
+        { keyword: 'v.hive', weight: 18 },
+        { keyword: 'team vitality', weight: 15 },
+        { keyword: 'mces', weight: 15 },
+        { keyword: 'lyon esport', weight: 12 },
+        { keyword: 'gaming campus', weight: 12 },
+        { keyword: 'gaming house', weight: 12 },
 
-        // Business Strategy
-        { keyword: 'revenue', weight: 12 },
-        { keyword: 'business model', weight: 12 },
-        { keyword: 'monetization', weight: 10 },
-        { keyword: 'franchise', weight: 8 },
-        { keyword: 'investissement', weight: 10 },
-        { keyword: 'financement', weight: 10 },
+        // ===== BUSINESS STRATEGY & OPERATIONS =====
+        { keyword: 'business model', weight: 15 },
+        { keyword: 'modèle économique', weight: 18 },
+        { keyword: 'model économique', weight: 18 },
+        { keyword: 'rentabilité', weight: 18 },
+        { keyword: 'profitability', weight: 18 },
+        { keyword: 'revenue', weight: 15 },
+        { keyword: 'chiffre d\'affaires', weight: 15 },
+        { keyword: 'monetization', weight: 12 },
+        { keyword: 'investissement', weight: 12 },
+        { keyword: 'financement', weight: 12 },
         { keyword: 'levée de fonds', weight: 12 },
-        { keyword: 'startup', weight: 8 },
+        { keyword: 'franchise', weight: 10 },
         { keyword: 'expansion', weight: 10 },
-        { keyword: 'market size', weight: 10 },
-        { keyword: 'market growth', weight: 10 },
-        { keyword: 'strategy', weight: 12 },
-        { keyword: 'stratégie', weight: 12 },
-        { keyword: 'management', weight: 10 },
-        { keyword: 'gestion', weight: 10 },
-        { keyword: 'model économique', weight: 15 },
-        { keyword: 'rentabilité', weight: 15 },
-        { keyword: 'profitability', weight: 15 },
+        { keyword: 'ouverture', weight: 8 },
+        { keyword: 'stratégie', weight: 10 },
+        { keyword: 'strategy', weight: 10 },
+        { keyword: 'management', weight: 8 },
 
-        // Technology & Infrastructure
-        { keyword: 'cloud gaming', weight: 12 },
-        { keyword: 'game streaming', weight: 10 },
-        { keyword: 'réalité virtuelle', weight: 8 },
-        { keyword: 'vr gaming', weight: 10 },
-        { keyword: 'xr', weight: 8 },
-        { keyword: 'hardware', weight: 6 },
-        { keyword: 'nvidia', weight: 5 },
-        { keyword: 'amd', weight: 5 },
-        { keyword: 'pc gaming', weight: 8 },
-        { keyword: 'gaming setup', weight: 8 },
-        { keyword: 'esport equipment', weight: 10 },
-
-        // Regulation & Legal
-        { keyword: 'réglementation', weight: 15 },
-        { keyword: 'législation', weight: 15 },
-        { keyword: 'regulation', weight: 12 },
-        { keyword: 'mineurs', weight: 10 },
-        { keyword: 'age restriction', weight: 10 },
-        { keyword: 'france esports', weight: 15 },
-        { keyword: 'fédération', weight: 10 },
-        { keyword: 'gaming law', weight: 12 },
-
-        // Market & Trends
+        // ===== ESPORT INDUSTRY & MARKET =====
+        { keyword: 'esport market', weight: 15 },
+        { keyword: 'marché esport', weight: 15 },
+        { keyword: 'esport industry', weight: 15 },
+        { keyword: 'industrie esport', weight: 15 },
         { keyword: 'market report', weight: 12 },
         { keyword: 'étude de marché', weight: 12 },
         { keyword: 'industry growth', weight: 10 },
         { keyword: 'audience growth', weight: 10 },
-        { keyword: 'sponsoring', weight: 10 },
-        { keyword: 'sponsorship', weight: 10 },
-        { keyword: 'partnership', weight: 10 },
-        { keyword: 'partenariat', weight: 10 },
-        { keyword: 'viewership', weight: 8 },
+        { keyword: 'viewership', weight: 10 },
+        { keyword: 'market size', weight: 10 },
+        { keyword: 'market growth', weight: 10 },
+        { keyword: 'sponsoring', weight: 12 },
+        { keyword: 'sponsorship', weight: 12 },
+        { keyword: 'partnership', weight: 12 },
+        { keyword: 'partenariat', weight: 12 },
 
-        // Events & Community
-        { keyword: 'tournament', weight: 8 },
-        { keyword: 'tournoi', weight: 8 },
-        { keyword: 'compétition', weight: 8 },
-        { keyword: 'team building', weight: 15 },
-        { keyword: 'corporate gaming', weight: 15 },
-        { keyword: 'esport event', weight: 10 },
-        { keyword: 'community', weight: 8 },
-        { keyword: 'local esports', weight: 12 },
-        { keyword: 'grassroots', weight: 10 },
-
-        // Esport Compétitions
-        { keyword: 'major', weight: 10 },
-        { keyword: 'championship', weight: 10 },
-        { keyword: 'qualifier', weight: 8 },
-        { keyword: 'playoffs', weight: 10 },
-        { keyword: 'grand final', weight: 12 },
-        { keyword: 'roster', weight: 8 },
-        { keyword: 'roster change', weight: 10 },
-        { keyword: 'transfer', weight: 8 },
-        { keyword: 'signed', weight: 6 },
-        { keyword: 'benched', weight: 8 },
-        { keyword: 'standings', weight: 6 },
-        { keyword: 'bracket', weight: 6 },
+        // ===== ESPORT COMPETITIONS (for watch parties & events) =====
         { keyword: 'counter-strike', weight: 10 },
         { keyword: 'cs2', weight: 10 },
         { keyword: 'valorant', weight: 10 },
@@ -653,56 +714,108 @@ export const FILTER_CONFIG: FilterConfig = {
         { keyword: 'esl', weight: 8 },
         { keyword: 'iem', weight: 10 },
         { keyword: 'pgl', weight: 8 },
-        { keyword: 'worlds', weight: 10 },
-        { keyword: 'msi', weight: 8 },
+        { keyword: 'worlds', weight: 8 },
         { keyword: 'lec', weight: 10 },
-        { keyword: 'lfl', weight: 12 },
-        { keyword: 'watch party', weight: 15 },
+        { keyword: 'lfl', weight: 15 },
+        { keyword: 'major', weight: 6 },
+        { keyword: 'championship', weight: 8 },
+        { keyword: 'tournament', weight: 8 },
+        { keyword: 'tournoi', weight: 8 },
+        { keyword: 'compétition', weight: 8 },
+        { keyword: 'grand final', weight: 10 },
+        { keyword: 'playoffs', weight: 8 },
+        { keyword: 'qualifier', weight: 6 },
+        { keyword: 'roster change', weight: 8 },
+        { keyword: 'transfer', weight: 6 },
 
-        // === PESTEL ANALYSIS KEYWORDS ===
-        // Political & Legal
-        { keyword: 'loi', weight: 15 },
-        { keyword: 'légal', weight: 15 },
-        { keyword: 'gdpr', weight: 12 },
-        { keyword: 'rgpd', weight: 12 },
-        { keyword: 'décret', weight: 12 },
-        { keyword: 'subvention', weight: 12 },
-        { keyword: 'politique publique', weight: 12 },
+        // ===== VENUE TECHNOLOGY =====
+        { keyword: 'cloud gaming', weight: 15 },
+        { keyword: 'game streaming', weight: 10 },
+        { keyword: 'vr gaming', weight: 12 },
+        { keyword: 'réalité virtuelle', weight: 10 },
+        { keyword: 'pc gaming', weight: 8 },
+        { keyword: 'gaming setup', weight: 10 },
+        { keyword: 'esport equipment', weight: 12 },
+        { keyword: 'sim racing', weight: 12 },
+        { keyword: 'simulateur', weight: 10 },
 
-        // Economic
-        { keyword: 'inflation', weight: 10 },
-        { keyword: 'pouvoir d\'achat', weight: 10 },
-        { keyword: 'crise économique', weight: 10 },
-        { keyword: 'budget', weight: 8 },
-        { keyword: 'rentabilité', weight: 10 },
+        // ===== REGULATION & LEGAL =====
+        { keyword: 'réglementation', weight: 18 },
+        { keyword: 'législation', weight: 18 },
+        { keyword: 'regulation', weight: 12 },
+        { keyword: 'mineurs', weight: 10 },
+        { keyword: 'age restriction', weight: 10 },
+        { keyword: 'france esports', weight: 18 },
+        { keyword: 'fédération', weight: 10 },
+        { keyword: 'gaming law', weight: 15 },
+        { keyword: 'loi', weight: 12 },
+        { keyword: 'légal', weight: 12 },
+        { keyword: 'gdpr', weight: 10 },
+        { keyword: 'rgpd', weight: 10 },
+        { keyword: 'subvention', weight: 15 },
 
-        // Social & Consumer Insights
+        // ===== EVENTS & COMMUNITY =====
+        { keyword: 'team building', weight: 18 },
+        { keyword: 'corporate gaming', weight: 18 },
+        { keyword: 'esport event', weight: 12 },
+        { keyword: 'community', weight: 6 },
+        { keyword: 'local esports', weight: 15 },
+        { keyword: 'grassroots', weight: 12 },
+        { keyword: 'événement gaming', weight: 15 },
+        { keyword: 'animation', weight: 8 },
+        { keyword: 'anniversaire', weight: 10 },
+
+        // ===== SOCIAL & AUDIENCE TRENDS =====
         { keyword: 'gen z', weight: 15 },
-        { keyword: 'millennials', weight: 12 },
-        { keyword: 'habitudes de consommation', weight: 15 },
-        { keyword: 'comportement', weight: 12 },
-        { keyword: 'tendance sociale', weight: 12 },
-        { keyword: 'inclusion', weight: 12 },
-        { keyword: 'diversité', weight: 12 },
-        { keyword: 'mixité', weight: 12 },
-        { keyword: 'santé mentale', weight: 12 },
+        { keyword: 'millennials', weight: 10 },
+        { keyword: 'habitudes de consommation', weight: 12 },
+        { keyword: 'inclusion', weight: 10 },
+        { keyword: 'diversité', weight: 10 },
+        { keyword: 'mixité', weight: 10 },
 
-        // Technological
-        { keyword: 'ai', weight: 12 },
-        { keyword: 'ia', weight: 12 },
-        { keyword: 'intelligence artificielle', weight: 12 },
-        { keyword: 'blockchain', weight: 10 },
-        { keyword: 'web3', weight: 10 },
-        { keyword: '5g', weight: 8 },
-        { keyword: 'innovation', weight: 10 },
-
-        // Environmental
-        { keyword: 'écologie', weight: 12 },
-        { keyword: 'rse', weight: 15 },
-        { keyword: 'carbone', weight: 12 },
-        { keyword: 'durable', weight: 12 },
+        // ===== ENVIRONMENTAL / RSE =====
+        { keyword: 'rse', weight: 12 },
         { keyword: 'sobriété énergétique', weight: 15 },
-        { keyword: 'green', weight: 10 },
+        { keyword: 'durable', weight: 8 },
+        { keyword: 'carbone', weight: 8 },
+    ],
+
+    // Keywords that REDUCE score — for ambiguous content that could be off-topic
+    penaltyKeywords: [
+        // Traditional sport spillover
+        { keyword: 'jersey', weight: -15 },
+        { keyword: 'maillot', weight: -12 },
+        { keyword: 'coach sportif', weight: -15 },
+        { keyword: 'stade', weight: -10 },
+        { keyword: 'stadium', weight: -10 },
+        { keyword: 'athlete', weight: -10 },
+        { keyword: 'athlète', weight: -10 },
+
+        // Auto/mobility
+        { keyword: 'automobile', weight: -20 },
+        { keyword: 'voiture', weight: -15 },
+        { keyword: 'car manufacturer', weight: -20 },
+        { keyword: 'electric car', weight: -15 },
+
+        // Non-gaming tech
+        { keyword: 'smartphone', weight: -12 },
+        { keyword: 'iphone', weight: -12 },
+        { keyword: 'android phone', weight: -10 },
+        { keyword: 'tablette', weight: -10 },
+        { keyword: 'wearable', weight: -10 },
+
+        // Entertainment / media
+        { keyword: 'film', weight: -8 },
+        { keyword: 'série tv', weight: -8 },
+        { keyword: 'cinéma', weight: -8 },
+        { keyword: 'musique', weight: -8 },
+
+        // Generic consumer
+        { keyword: 'promo', weight: -8 },
+        { keyword: 'bon plan', weight: -10 },
+        { keyword: 'comparatif', weight: -8 },
+        { keyword: 'test produit', weight: -10 },
+        { keyword: 'unboxing', weight: -10 },
     ],
 
     // Category importance weights
@@ -711,9 +824,12 @@ export const FILTER_CONFIG: FilterConfig = {
         regulation: 1.5,
         local: 1.4,
         esport: 1.3,
-        tech: 1.2,
+        tech: 1.1,     // reduced from 1.2 — too many off-topic tech articles
         industry: 1.0,
     },
+
+    // Minimum score to include in the feed — below this, article is dropped
+    minimumScoreThreshold: 18,
 };
 
 // Dashboard configuration

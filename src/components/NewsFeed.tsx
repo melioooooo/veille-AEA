@@ -131,10 +131,21 @@ export default function NewsFeed({ news }: NewsFeedProps) {
                                 </motion.div>
                             </div>
 
-                            <div className="flex items-center gap-2 mt-2">
+                            <div className="flex items-center gap-2 mt-2 flex-wrap">
                                 <span className={`badge text-[10px] py-0 ${getCategoryClass(newsItem.sourceCategory)}`}>
                                     {newsItem.sourceCategory}
                                 </span>
+                                {newsItem.pestelCategory && (
+                                    <span className="text-[10px] px-1.5 py-0 rounded bg-[rgba(139,92,246,0.1)] text-[#a78bfa]">
+                                        {newsItem.pestelCategory}
+                                    </span>
+                                )}
+                                {newsItem.impactType && newsItem.impactType !== 'neutral' && (
+                                    <span className={`text-[10px] ${newsItem.impactType === 'opportunity' ? 'text-emerald-400' : 'text-red-400'
+                                        }`}>
+                                        {newsItem.impactType === 'opportunity' ? '↗' : '↘'}
+                                    </span>
+                                )}
                                 <span className="text-[10px] text-[#666]">{newsItem.source}</span>
                                 <span className="text-[10px] text-[#666]">•</span>
                                 <span className="text-[10px] text-[#666]">{formattedDate}</span>

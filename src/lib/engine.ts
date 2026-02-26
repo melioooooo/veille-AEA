@@ -1,5 +1,5 @@
 import Parser from 'rss-parser';
-import { NewsItem, NewsSource } from './types';
+import { NewsItem, NewsSource, PestelCategory, ImpactType } from './types';
 import { NEWS_SOURCES, FILTER_CONFIG, DASHBOARD_CONFIG } from './config';
 
 const parser = new Parser({
@@ -38,6 +38,16 @@ function calculateScore(title: string, description: string, category: NewsSource
             score += weight;
         }
     }
+
+    // Apply penalty keywords (negative weights)
+    for (const { keyword, weight } of FILTER_CONFIG.penaltyKeywords) {
+        if (text.includes(keyword.toLowerCase())) {
+            score += weight; // weight is negative
+        }
+    }
+
+    // Ensure score doesn't go below 0
+    score = Math.max(0, score);
 
     // Apply category weight
     const categoryWeight = FILTER_CONFIG.categoryWeights[category] || 1;
@@ -82,11 +92,13 @@ function generateBusinessJustification(title: string, description: string, sourc
         };
     }
 
-    // Esport Competitions — context-aware: only trigger if source is esport category,
-    // or if text contains specific esport game/league terms (not ambiguous words like 'worlds' or 'major' alone)
-    const esportSpecificTerms = ['cs2', 'counter-strike', 'valorant', 'vct', 'lec', 'lfl', 'roster', 'qualifier', 'playoffs', 'grand final'];
+    // Esport Competitions — require at least 1 esport-specific term in the text,
+    // even for esport-category sources, to avoid false positives (e.g. hockey news on Dexerto)
+    const esportSpecificTerms = ['cs2', 'counter-strike', 'valorant', 'vct', 'lec', 'lfl', 'lol',
+        'league of legends', 'dota', 'roster', 'qualifier', 'playoffs', 'grand final',
+        'esport', 'e-sport', 'esports', 'lan', 'gaming', 'gamer'];
     const esportHits = esportSpecificTerms.filter(term => text.includes(term)).length;
-    if (sourceCategory === 'esport' || esportHits >= 2) {
+    if (esportHits >= 1 && (sourceCategory === 'esport' || esportHits >= 2)) {
         return {
             insight: "Programmation esport",
             justification: "Compétition ou actualité esport à suivre pour organiser des watch parties, tournois locaux ou événements thématiques à l'Arena. Opportunité de fédérer la communauté locale autour des grandes compétitions."
@@ -177,6 +189,117 @@ function extractTags(title: string, description: string): string[] {
     return tags.slice(0, 4);
 }
 
+// Classify article into PESTEL axis based on content
+function classifyPestel(title: string, description: string, sourceCategory: string): PestelCategory {
+    const text = `${title} ${description}`.toLowerCase();
+
+    // Keyword maps for each PESTEL axis (ordered by specificity)
+    const pestelKeywords: Record<PestelCategory, string[]> = {
+        'legal': [
+            'loi', 'réglementation', 'régulation', 'juridique', 'droit', 'décret',
+            'interdiction', 'rgpd', 'gdpr', 'restriction', 'légal', 'législation',
+            'compliance', 'conformité', 'mineurs', 'age restriction', 'gaming law',
+            'france esports', 'fédération',
+        ],
+        'politique': [
+            'gouvernement', 'ministère', 'politique publique', 'subvention', 'état',
+            'élection', 'public', 'municipalité', 'collectivité', 'région',
+            'politique', 'sénat', 'assemblée', 'mairie',
+        ],
+        'environnemental': [
+            'écologie', 'rse', 'carbone', 'durable', 'énergie', 'climat',
+            'sobriété énergétique', 'empreinte', 'green', 'recyclage',
+            'environnement', 'planète',
+        ],
+        'social': [
+            'gen z', 'millennials', 'jeunes', 'inclusion', 'diversité', 'mixité',
+            'communauté', 'audience', 'comportement', 'habitudes', 'social',
+            'santé mentale', 'éducation', 'femmes', 'accessibilité', 'engagement',
+            'consumer', 'consommateur', 'tendance sociale',
+        ],
+        'technologique': [
+            'ia', 'ai', 'intelligence artificielle', 'vr', 'réalité virtuelle',
+            'cloud gaming', 'streaming', 'hardware', 'innovation', 'tech',
+            'logiciel', 'blockchain', 'web3', '5g', 'gpu', 'nvidia', 'amd',
+            'sim racing', 'simulateur', 'pc gaming', 'infrastructure',
+        ],
+        'economique': [
+            'marché', 'financement', 'investissement', 'levée de fonds', 'revenue',
+            'chiffre', 'croissance', 'inflation', 'budget', 'rentabilité',
+            'business model', 'modèle économique', 'expansion', 'startup',
+            'sponsoring', 'sponsorship', 'partenariat', 'partnership',
+            'monetization', 'franchise', 'ouverture',
+        ],
+    };
+
+    // Score each axis and pick the best match
+    let bestCategory: PestelCategory = 'economique'; // default
+    let bestScore = 0;
+
+    for (const [category, keywords] of Object.entries(pestelKeywords) as [PestelCategory, string[]][]) {
+        let score = 0;
+        for (const kw of keywords) {
+            if (text.includes(kw)) score++;
+        }
+        if (score > bestScore) {
+            bestScore = score;
+            bestCategory = category;
+        }
+    }
+
+    // Fallback based on sourceCategory if no keyword matched
+    if (bestScore === 0) {
+        const sourceFallbacks: Record<string, PestelCategory> = {
+            'tech': 'technologique',
+            'business': 'economique',
+            'regulation': 'legal',
+            'esport': 'economique',
+            'industry': 'economique',
+            'local': 'social',
+        };
+        return sourceFallbacks[sourceCategory] || 'economique';
+    }
+
+    return bestCategory;
+}
+
+// Classify article impact as opportunity, threat, or neutral
+function classifyImpact(title: string, description: string): ImpactType {
+    const text = `${title} ${description}`.toLowerCase();
+
+    const opportunitySignals = [
+        'croissance', 'growth', 'expansion', 'partenariat', 'partnership',
+        'nouveau', 'new', 'innovation', 'subvention', 'lancement',
+        'ouverture', 'investissement', 'investment', 'funding', 'levée de fonds',
+        'record', 'succès', 'success', 'hausse', 'augmentation',
+        'opportunité', 'opportunity', 'tendance', 'trend',
+        'collaboration', 'sponsoring', 'sponsor',
+    ];
+
+    const threatSignals = [
+        'réglementation', 'regulation', 'interdiction', 'ban',
+        'baisse', 'decline', 'fermeture', 'shutdown', 'closing',
+        'concurrence', 'competition', 'taxe', 'tax', 'procès', 'lawsuit',
+        'amende', 'fine', 'restriction', 'pénurie', 'shortage',
+        'crise', 'crisis', 'faillite', 'bankruptcy', 'licenciement',
+        'risque', 'risk', 'menace', 'threat', 'perte', 'loss',
+    ];
+
+    let oppScore = 0;
+    let threatScore = 0;
+
+    for (const signal of opportunitySignals) {
+        if (text.includes(signal)) oppScore++;
+    }
+    for (const signal of threatSignals) {
+        if (text.includes(signal)) threatScore++;
+    }
+
+    if (oppScore > threatScore && oppScore >= 1) return 'opportunity';
+    if (threatScore > oppScore && threatScore >= 1) return 'threat';
+    return 'neutral';
+}
+
 // Fetch news from a single RSS source
 async function fetchFromSource(source: NewsSource): Promise<NewsItem[]> {
     try {
@@ -193,7 +316,14 @@ async function fetchFromSource(source: NewsSource): Promise<NewsItem[]> {
             }
 
             const score = calculateScore(title, description, source.category);
+
+            // Skip articles below minimum relevance threshold
+            if (score < FILTER_CONFIG.minimumScoreThreshold) {
+                continue;
+            }
             const { insight, justification } = generateBusinessJustification(title, description, source.category);
+            const pestelCategory = classifyPestel(title, description, source.category);
+            const impactType = classifyImpact(title, description);
 
             items.push({
                 id: generateId(title, source.id),
@@ -208,6 +338,8 @@ async function fetchFromSource(source: NewsSource): Promise<NewsItem[]> {
                 tags: extractTags(title, description),
                 businessInsight: insight,
                 businessJustification: justification,
+                pestelCategory,
+                impactType,
             });
         }
 

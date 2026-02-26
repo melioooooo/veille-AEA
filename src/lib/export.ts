@@ -5,13 +5,15 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 export function exportToCSV(items: NewsItem[], filename = 'veille-export', date?: string): void {
-  const headers = ['Date', 'Titre', 'Source', 'Catégorie', 'Score', 'Lien', 'Insight'];
+  const headers = ['Date', 'Titre', 'Source', 'Catégorie', 'PESTEL', 'Impact', 'Score', 'Lien', 'Insight'];
 
   const rows = items.map(item => [
     format(new Date(item.pubDate), 'yyyy-MM-dd', { locale: fr }),
     `"${item.title.replace(/"/g, '""')}"`,
     item.source,
     item.sourceCategory,
+    item.pestelCategory || '',
+    item.impactType || 'neutral',
     item.score.toString(),
     item.link,
     item.businessInsight ? `"${item.businessInsight.replace(/"/g, '""')}"` : '',
@@ -113,7 +115,10 @@ export function exportToPDF(
           <div class="article">
             <div class="article-title">${item.title}</div>
             <div class="article-meta">
-              ${item.source} • ${item.sourceCategory} • 
+              ${item.source} • ${item.sourceCategory}
+              ${item.pestelCategory ? ` • <span style="color: #7c3aed;">${item.pestelCategory}</span>` : ''}
+              ${item.impactType && item.impactType !== 'neutral' ? ` • <span style="color: ${item.impactType === 'opportunity' ? '#16a34a' : '#dc2626'};">${item.impactType === 'opportunity' ? '↗ Opportunité' : '↘ Menace'}</span>` : ''}
+              •
               <span class="score ${item.score >= 30 ? 'score-high' : item.score >= 20 ? 'score-medium' : 'score-low'}">
                 Score ${item.score}
               </span>
@@ -133,8 +138,10 @@ export function exportToPDF(
         <div class="article">
           <div class="article-title">${item.title}</div>
           <div class="article-meta">
-            ${item.source} • ${item.sourceCategory} • 
-            ${format(new Date(item.pubDate), 'dd MMM', { locale: fr })}
+            ${item.source} • ${item.sourceCategory}
+            ${item.pestelCategory ? ` • <span style="color: #7c3aed;">${item.pestelCategory}</span>` : ''}
+            ${item.impactType && item.impactType !== 'neutral' ? ` • <span style="color: ${item.impactType === 'opportunity' ? '#16a34a' : '#dc2626'};">${item.impactType === 'opportunity' ? '↗ Opportunité' : '↘ Menace'}</span>` : ''}
+            • ${format(new Date(item.pubDate), 'dd MMM', { locale: fr })}
           </div>
         </div>
       `).join('')}
@@ -143,25 +150,39 @@ export function exportToPDF(
       <h2>📊 Analyse Stratégique</h2>
       
       <div style="margin-bottom: 24px;">
-        <h3>Analyse PESTEL (Facteurs clés)</h3>
-        <p style="font-size: 12px; color: #666; margin-bottom: 12px;">Basé sur l'analyse sémantique des articles de la période.</p>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <div style="background: #f8fafc; padding: 12px; border-radius: 4px;">
-                <strong>Politique & Légal</strong><br>
-                <span style="font-size: 12px;">Régulation, RGPD, Lois numériques</span>
-            </div>
-            <div style="background: #f8fafc; padding: 12px; border-radius: 4px;">
-                <strong>Économique</strong><br>
-                <span style="font-size: 12px;">Inflation, Marché esport, Investissements</span>
-            </div>
-            <div style="background: #f8fafc; padding: 12px; border-radius: 4px;">
-                <strong>Social</strong><br>
-                <span style="font-size: 12px;">Habitudes Gen Z, Inclusion, Diversité</span>
-            </div>
-            <div style="background: #f8fafc; padding: 12px; border-radius: 4px;">
-                <strong>Technologique</strong><br>
-                <span style="font-size: 12px;">IA, VR/AR, Hardware, Innovation</span>
-            </div>
+        <h3>Analyse PESTEL (Répartition)</h3>
+        <p style="font-size: 12px; color: #666; margin-bottom: 12px;">Basé sur la classification automatique des ${items.length} articles de la période.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+            ${(['politique', 'economique', 'social', 'technologique', 'environnemental', 'legal'] as const).map(cat => {
+    const count = items.filter(i => i.pestelCategory === cat).length;
+    const labels: Record<string, string> = {
+      politique: 'Politique', economique: 'Économique', social: 'Social',
+      technologique: 'Technologique', environnemental: 'Environnemental', legal: 'Légal'
+    };
+    return `<div style="background: #f8fafc; padding: 12px; border-radius: 4px;">
+                <strong>${labels[cat]}</strong><br>
+                <span style="font-size: 14px; font-weight: 600;">${count}</span>
+                <span style="font-size: 12px; color: #666;"> articles</span>
+              </div>`;
+  }).join('')}
+        </div>
+      </div>
+
+       <div style="margin-bottom: 24px;">
+        <h3>Qualification Impact</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 12px;">
+          <div style="background: #dcfce7; padding: 12px; border-radius: 4px; text-align: center;">
+            <div style="font-size: 20px; font-weight: 600; color: #166534;">${items.filter(i => i.impactType === 'opportunity').length}</div>
+            <div style="font-size: 12px; color: #166534;">↗ Opportunités</div>
+          </div>
+          <div style="background: #fef3c7; padding: 12px; border-radius: 4px; text-align: center;">
+            <div style="font-size: 20px; font-weight: 600; color: #92400e;">${items.filter(i => i.impactType === 'neutral').length}</div>
+            <div style="font-size: 12px; color: #92400e;">• Neutres</div>
+          </div>
+          <div style="background: #fee2e2; padding: 12px; border-radius: 4px; text-align: center;">
+            <div style="font-size: 20px; font-weight: 600; color: #991b1b;">${items.filter(i => i.impactType === 'threat').length}</div>
+            <div style="font-size: 12px; color: #991b1b;">↘ Menaces</div>
+          </div>
         </div>
       </div>
 
@@ -172,16 +193,17 @@ export function exportToPDF(
                 <td style="width: 50%; padding: 12px; border: 1px solid #ddd; vertical-align: top;">
                     <div style="color: #166534; font-weight: bold; margin-bottom: 8px;">Forces (Interne)</div>
                     <ul style="font-size: 12px; padding-left: 16px; margin: 0;">
-                        <li>Positionnement local fort</li>
-                        <li>Offre diversifiée (PC/Console/Simu)</li>
-                        <li>Ancrage communautaire</li>
+                        <li>Positionnement local fort en Alsace</li>
+                        <li>Communauté gaming engagée</li>
+                        <li>Outil de veille automatisé</li>
                     </ul>
                 </td>
                 <td style="width: 50%; padding: 12px; border: 1px solid #ddd; vertical-align: top;">
                     <div style="color: #991b1b; font-weight: bold; margin-bottom: 8px;">Faiblesses (Interne)</div>
                     <ul style="font-size: 12px; padding-left: 16px; margin: 0;">
-                        <li>Dépendance aux éditeurs</li>
-                        <li>Coûts de maintenance matériel</li>
+                        <li>Dépendance aux éditeurs de jeux</li>
+                        <li>Coûts énergétiques élevés</li>
+                        <li>Marché local limité en taille</li>
                     </ul>
                 </td>
             </tr>
@@ -189,16 +211,15 @@ export function exportToPDF(
                 <td style="width: 50%; padding: 12px; border: 1px solid #ddd; vertical-align: top;">
                     <div style="color: #1e40af; font-weight: bold; margin-bottom: 8px;">Opportunités (Externe)</div>
                     <ul style="font-size: 12px; padding-left: 16px; margin: 0;">
-                        <li>Développement du B2B / Corporate</li>
-                        <li>Croissance du marché VR</li>
-                        <li>Demande de lieux de pratique sociale</li>
+                        ${items.filter(i => i.impactType === 'opportunity').slice(0, 4).map(i => `<li>${i.title}</li>`).join('')}
+                        ${items.filter(i => i.impactType === 'opportunity').length === 0 ? '<li>Diversification B2B</li><li>Événementiel d\'entreprise</li>' : ''}
                     </ul>
                 </td>
                 <td style="width: 50%; padding: 12px; border: 1px solid #ddd; vertical-align: top;">
                     <div style="color: #9a3412; font-weight: bold; margin-bottom: 8px;">Menaces (Externe)</div>
                     <ul style="font-size: 12px; padding-left: 16px; margin: 0;">
-                        <li>Hausse des coûts de l'énergie</li>
-                        <li>Concurrence indirecte (Home gaming)</li>
+                        ${items.filter(i => i.impactType === 'threat').slice(0, 4).map(i => `<li>${i.title}</li>`).join('')}
+                        ${items.filter(i => i.impactType === 'threat').length === 0 ? '<li>Régulation accrue</li><li>Volatilité du marché esport</li>' : ''}
                     </ul>
                 </td>
             </tr>

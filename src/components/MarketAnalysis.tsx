@@ -1,7 +1,5 @@
 'use client';
 
-import SWOTAnalysis from './SWOTAnalysis';
-import PESTELRadar from './PESTELRadar';
 import { NewsItem } from '@/lib/types';
 import { Fragment } from 'react';
 
@@ -77,16 +75,6 @@ export default function MarketAnalysis({ competitors, news = [] }: MarketAnalysi
 
     return (
         <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* SWOT Analysis - Takes 2 cols */}
-                <div className="lg:col-span-2">
-                    <SWOTAnalysis news={news} />
-                </div>
-                {/* PESTEL Analysis - Takes 1 col */}
-                <div>
-                    <PESTELRadar news={news} />
-                </div>
-            </div>
 
             <motion.div
                 initial={{ opacity: 0, y: 10 }}

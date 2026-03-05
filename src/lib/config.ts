@@ -635,6 +635,19 @@ export const FILTER_CONFIG: FilterConfig = {
         'animal crossing',
         'zelda',
         'hogwarts legacy',
+
+        // Consumer tech apps / services unrelated to gaming
+        'google maps',
+        'apple maps',
+        'waze',
+        'uber',
+        'lyft',
+        'airbnb',
+        'tiktok shop',
+        'instagram reels',
+        'snapchat',
+        'whatsapp',
+        'telegram channel',
     ],
 
     // Keywords that boost relevance score — focused on AEA business environment
@@ -679,11 +692,7 @@ export const FILTER_CONFIG: FilterConfig = {
         { keyword: 'financement', weight: 12 },
         { keyword: 'levée de fonds', weight: 12 },
         { keyword: 'franchise', weight: 10 },
-        { keyword: 'expansion', weight: 10 },
         { keyword: 'ouverture', weight: 8 },
-        { keyword: 'stratégie', weight: 10 },
-        { keyword: 'strategy', weight: 10 },
-        { keyword: 'management', weight: 8 },
 
         // ===== ESPORT INDUSTRY & MARKET =====
         { keyword: 'esport market', weight: 15 },
@@ -816,6 +825,21 @@ export const FILTER_CONFIG: FilterConfig = {
         { keyword: 'comparatif', weight: -8 },
         { keyword: 'test produit', weight: -10 },
         { keyword: 'unboxing', weight: -10 },
+
+        // Consumer tech apps / branding (no gaming relevance)
+        { keyword: 'google maps', weight: -20 },
+        { keyword: 'apple maps', weight: -15 },
+        { keyword: 'waze', weight: -15 },
+        { keyword: 'icône', weight: -8 },
+        { keyword: 'logo redesign', weight: -12 },
+        { keyword: 'rebranding', weight: -10 },
+        { keyword: 'satellite', weight: -12 },
+        { keyword: 'photovoltaïque', weight: -12 },
+        { keyword: 'agriculture', weight: -12 },
+        { keyword: 'médecine', weight: -10 },
+        { keyword: 'santé numérique', weight: -10 },
+        { keyword: 'fintech', weight: -10 },
+        { keyword: 'insurtech', weight: -10 },
     ],
 
     // Category importance weights
@@ -829,7 +853,7 @@ export const FILTER_CONFIG: FilterConfig = {
     },
 
     // Minimum score to include in the feed — below this, article is dropped
-    minimumScoreThreshold: 18,
+    minimumScoreThreshold: 20,
 };
 
 // Dashboard configuration

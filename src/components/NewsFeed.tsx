@@ -151,12 +151,28 @@ export default function NewsFeed({ news }: NewsFeedProps) {
                                 <span className="text-[10px] text-[#666]">{formattedDate}</span>
                                 <motion.span
                                     whileHover={{ scale: 1.15 }}
-                                    className={`text-[10px] ml-auto ${newsItem.score >= 30 ? 'text-[#4ade80]' :
+                                    className="flex items-center gap-1 ml-auto"
+                                >
+                                    {newsItem.relevance && (
+                                        <span
+                                            className={`w-1.5 h-1.5 rounded-full shrink-0 ${newsItem.relevance === 'high' ? 'bg-emerald-400' :
+                                                    newsItem.relevance === 'medium' ? 'bg-amber-400' :
+                                                        'bg-[#444]'
+                                                }`}
+                                            title={
+                                                newsItem.relevance === 'high' ? 'Très pertinent pour AEA' :
+                                                    newsItem.relevance === 'medium' ? 'Pertinence modérée' :
+                                                        'Pertinence faible'
+                                            }
+                                        />
+                                    )}
+                                    <span className={`text-[10px] ${newsItem.score >= 30 ? 'text-[#4ade80]' :
                                         newsItem.score >= 20 ? 'text-[#fbbf24]' :
                                             'text-[#666]'
                                         }`}
-                                >
-                                    {newsItem.score}
+                                    >
+                                        {newsItem.score}
+                                    </span>
                                 </motion.span>
                             </div>
                         </motion.article>

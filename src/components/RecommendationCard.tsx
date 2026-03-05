@@ -63,8 +63,8 @@ export default function RecommendationCard({ item, index }: RecommendationCardPr
                     </span>
                     {item.impactType && item.impactType !== 'neutral' && (
                         <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${item.impactType === 'opportunity'
-                                ? 'bg-emerald-500/15 text-emerald-400'
-                                : 'bg-red-500/15 text-red-400'
+                            ? 'bg-emerald-500/15 text-emerald-400'
+                            : 'bg-red-500/15 text-red-400'
                             }`}>
                             {item.impactType === 'opportunity' ? '↗ Opportunité' : '↘ Menace'}
                         </span>
@@ -146,15 +146,30 @@ export default function RecommendationCard({ item, index }: RecommendationCardPr
                 className="flex items-center justify-between mt-4 pt-3 border-t border-[rgba(255,255,255,0.06)]"
             >
                 <span className="text-xs text-[#666]">{item.source}</span>
-                <motion.span
-                    whileHover={{ scale: 1.1 }}
-                    className={`text-xs font-medium ${item.score >= 30 ? 'text-[#4ade80]' :
-                        item.score >= 20 ? 'text-[#fbbf24]' :
-                            'text-[#666]'
-                        }`}
-                >
-                    Score {item.score}
-                </motion.span>
+                <div className="flex items-center gap-1.5">
+                    {item.relevance && (
+                        <span
+                            className={`w-2 h-2 rounded-full shrink-0 ${item.relevance === 'high' ? 'bg-emerald-400' :
+                                    item.relevance === 'medium' ? 'bg-amber-400' :
+                                        'bg-[#444]'
+                                }`}
+                            title={
+                                item.relevance === 'high' ? 'Très pertinent pour AEA' :
+                                    item.relevance === 'medium' ? 'Pertinence modérée' :
+                                        'Pertinence faible'
+                            }
+                        />
+                    )}
+                    <motion.span
+                        whileHover={{ scale: 1.1 }}
+                        className={`text-xs font-medium ${item.score >= 30 ? 'text-[#4ade80]' :
+                            item.score >= 20 ? 'text-[#fbbf24]' :
+                                'text-[#666]'
+                            }`}
+                    >
+                        Score {item.score}
+                    </motion.span>
+                </div>
             </motion.div>
         </motion.article>
     );

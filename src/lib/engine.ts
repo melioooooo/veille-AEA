@@ -1,5 +1,5 @@
 import Parser from 'rss-parser';
-import { NewsItem, NewsSource, PestelCategory, ImpactType } from './types';
+import { NewsItem, NewsSource, PestelCategory, ImpactType, RelevanceTier } from './types';
 import { NEWS_SOURCES, FILTER_CONFIG, DASHBOARD_CONFIG } from './config';
 
 const parser = new Parser({
@@ -27,8 +27,63 @@ function isBlacklisted(text: string): boolean {
     return FILTER_CONFIG.blacklist.some(term => lowerText.includes(term.toLowerCase()));
 }
 
+// ============================================================
+// AEA RELEVANCE DETECTION
+// Determines how relevant an article is to AEA's business.
+// This is the PRIMARY gate that prevents false positives.
+// ============================================================
+
+// Terms that prove direct AEA relevance (gaming venue / esport business)
+const HIGH_RELEVANCE_TERMS = [
+    'arena', 'gaming center', 'gaming centre', 'lan center', 'lan party',
+    'gaming lounge', 'gaming cafe', 'cybercafé', 'bar esport', 'gaming bar',
+    'salle de jeux', 'espace gaming', 'watch party', 'esport venue',
+    'alsace', 'strasbourg',
+    // Competitor names
+    'espot', 'v.hive', 'team vitality', 'mces', 'lyon esport', 'gaming campus',
+    'gaming house', 'meltdown',
+    // Esport business specific
+    'esport market', 'marché esport', 'esport industry', 'industrie esport',
+    'france esports', 'fédération esport',
+];
+
+// Terms that indicate medium relevance (gaming/esport ecosystem)
+const MEDIUM_RELEVANCE_TERMS = [
+    'esport', 'e-sport', 'esports', 'gaming', 'gamer', 'lan',
+    'cs2', 'counter-strike', 'valorant', 'vct', 'league of legends', 'lol',
+    'lec', 'lfl', 'dota', 'roster', 'playoffs', 'grand final',
+    'tournoi', 'tournament', 'compétition',
+    'cloud gaming', 'vr gaming', 'réalité virtuelle', 'sim racing', 'simulateur',
+    'pc gaming', 'gaming setup', 'gpu', 'nvidia', 'amd',
+    'streaming', 'twitch', 'viewership',
+    'sponsoring', 'sponsorship',
+    'team building', 'corporate gaming',
+    'gen z', 'jeu vidéo', 'jeux vidéo', 'video game', 'video games',
+    'réglementation gaming', 'regulation gaming', 'mineurs',
+    'gaming law', 'loi gaming', 'loi esport',
+];
+
+function calculateRelevance(text: string): RelevanceTier {
+    const lower = text.toLowerCase();
+
+    // Check for high relevance (direct AEA business)
+    for (const term of HIGH_RELEVANCE_TERMS) {
+        if (lower.includes(term)) return 'high';
+    }
+
+    // Check for medium relevance (gaming/esport ecosystem)
+    let mediumHits = 0;
+    for (const term of MEDIUM_RELEVANCE_TERMS) {
+        if (lower.includes(term)) mediumHits++;
+    }
+    // Need at least 1 gaming/esport term to be considered medium
+    if (mediumHits >= 1) return 'medium';
+
+    return 'low';
+}
+
 // Calculate relevance score for a news item
-function calculateScore(title: string, description: string, category: NewsSource['category']): number {
+function calculateScore(title: string, description: string, category: NewsSource['category'], relevance: RelevanceTier): number {
     const text = `${title} ${description}`.toLowerCase();
     let score = 10; // Base score
 
@@ -53,12 +108,29 @@ function calculateScore(title: string, description: string, category: NewsSource
     const categoryWeight = FILTER_CONFIG.categoryWeights[category] || 1;
     score *= categoryWeight;
 
+    // ===== RELEVANCE PENALTY =====
+    // Articles with no gaming/esport connection get heavily penalized
+    if (relevance === 'low') {
+        score *= 0.3;
+    } else if (relevance === 'medium') {
+        score *= 0.85;
+    }
+    // high relevance = no penalty (1.0)
+
     return Math.round(score);
 }
 
 // Generate business justification - WHY this is relevant for Alsace Esport Arena
-function generateBusinessJustification(title: string, description: string, sourceCategory: string): { insight: string; justification: string } {
+function generateBusinessJustification(title: string, description: string, sourceCategory: string, relevance: RelevanceTier): { insight: string; justification: string } {
     const text = `${title} ${description}`.toLowerCase();
+
+    // If article has low relevance to AEA, don't generate a confident justification
+    if (relevance === 'low') {
+        return {
+            insight: "Contexte général",
+            justification: "Article d'actualité généraliste. Pertinence indirecte pour l'Arena — à considérer uniquement si un lien avec le gaming ou l'esport émerge."
+        };
+    }
 
     // Venue & Infrastructure
     if (text.includes('arena') || text.includes('venue') || text.includes('gaming center') || text.includes('lan center')) {
@@ -76,8 +148,9 @@ function generateBusinessJustification(title: string, description: string, sourc
         };
     }
 
-    // Regulation & Legal
-    if (text.includes('regulation') || text.includes('réglementation') || text.includes('loi') || text.includes('law') || text.includes('legal')) {
+    // Regulation & Legal — require gaming/esport context to avoid false positives
+    const hasGamingContext = ['gaming', 'esport', 'jeu vidéo', 'jeux vidéo', 'mineurs'].some(t => text.includes(t));
+    if (hasGamingContext && (text.includes('regulation') || text.includes('réglementation') || text.includes('loi') || text.includes('law') || text.includes('legal'))) {
         return {
             insight: "Veille réglementaire",
             justification: "Essentiel pour anticiper les évolutions légales impactant l'exploitation (restrictions d'âge, horaires, licences) et assurer la conformité de l'établissement."
@@ -92,8 +165,7 @@ function generateBusinessJustification(title: string, description: string, sourc
         };
     }
 
-    // Esport Competitions — require at least 1 esport-specific term in the text,
-    // even for esport-category sources, to avoid false positives (e.g. hockey news on Dexerto)
+    // Esport Competitions — require at least 1 esport-specific term in the text
     const esportSpecificTerms = ['cs2', 'counter-strike', 'valorant', 'vct', 'lec', 'lfl', 'lol',
         'league of legends', 'dota', 'roster', 'qualifier', 'playoffs', 'grand final',
         'esport', 'e-sport', 'esports', 'lan', 'gaming', 'gamer'];
@@ -164,7 +236,7 @@ function generateBusinessJustification(title: string, description: string, sourc
     // Default
     return {
         insight: "Tendance sectorielle",
-        justification: "Évolution du marché à surveiller pour adapter la stratégie de l'Arena et identifier les opportunités émergentes."
+        justification: "Évolution du marché gaming/esport à surveiller pour adapter la stratégie de l'Arena et identifier les opportunités émergentes."
     };
 }
 
@@ -264,25 +336,31 @@ function classifyPestel(title: string, description: string, sourceCategory: stri
 }
 
 // Classify article impact as opportunity, threat, or neutral
-function classifyImpact(title: string, description: string): ImpactType {
+// IMPORTANT: requires relevance gating — irrelevant articles are ALWAYS neutral
+function classifyImpact(title: string, description: string, relevance: RelevanceTier): ImpactType {
+    // Gate: if the article has no gaming/esport relevance, it cannot be a threat or opportunity for AEA
+    if (relevance === 'low') return 'neutral';
+
     const text = `${title} ${description}`.toLowerCase();
 
+    // Opportunity signals — focused on gaming/esport/venue context
     const opportunitySignals = [
         'croissance', 'growth', 'expansion', 'partenariat', 'partnership',
-        'nouveau', 'new', 'innovation', 'subvention', 'lancement',
+        'innovation', 'subvention', 'lancement',
         'ouverture', 'investissement', 'investment', 'funding', 'levée de fonds',
         'record', 'succès', 'success', 'hausse', 'augmentation',
-        'opportunité', 'opportunity', 'tendance', 'trend',
+        'opportunité', 'opportunity',
         'collaboration', 'sponsoring', 'sponsor',
     ];
 
+    // Threat signals — removed overly generic terms like 'concurrence', 'competition', 'risk'
     const threatSignals = [
-        'réglementation', 'regulation', 'interdiction', 'ban',
+        'interdiction', 'ban',
         'baisse', 'decline', 'fermeture', 'shutdown', 'closing',
-        'concurrence', 'competition', 'taxe', 'tax', 'procès', 'lawsuit',
+        'taxe', 'tax', 'procès', 'lawsuit',
         'amende', 'fine', 'restriction', 'pénurie', 'shortage',
         'crise', 'crisis', 'faillite', 'bankruptcy', 'licenciement',
-        'risque', 'risk', 'menace', 'threat', 'perte', 'loss',
+        'perte', 'loss',
     ];
 
     let oppScore = 0;
@@ -295,6 +373,12 @@ function classifyImpact(title: string, description: string): ImpactType {
         if (text.includes(signal)) threatScore++;
     }
 
+    // Require a minimum margin to avoid noisy classification
+    if (oppScore > threatScore && oppScore >= 2) return 'opportunity';
+    if (threatScore > oppScore && threatScore >= 2) return 'threat';
+    // For medium-relevance articles, be more conservative
+    if (relevance === 'medium') return 'neutral';
+    // High relevance: allow single-signal classification
     if (oppScore > threatScore && oppScore >= 1) return 'opportunity';
     if (threatScore > oppScore && threatScore >= 1) return 'threat';
     return 'neutral';
@@ -315,15 +399,19 @@ async function fetchFromSource(source: NewsSource): Promise<NewsItem[]> {
                 continue;
             }
 
-            const score = calculateScore(title, description, source.category);
+            // Calculate AEA relevance FIRST — this gates everything else
+            const fullText = `${title} ${description}`;
+            const relevance = calculateRelevance(fullText);
+
+            const score = calculateScore(title, description, source.category, relevance);
 
             // Skip articles below minimum relevance threshold
             if (score < FILTER_CONFIG.minimumScoreThreshold) {
                 continue;
             }
-            const { insight, justification } = generateBusinessJustification(title, description, source.category);
+            const { insight, justification } = generateBusinessJustification(title, description, source.category, relevance);
             const pestelCategory = classifyPestel(title, description, source.category);
-            const impactType = classifyImpact(title, description);
+            const impactType = classifyImpact(title, description, relevance);
 
             items.push({
                 id: generateId(title, source.id),
@@ -340,6 +428,7 @@ async function fetchFromSource(source: NewsSource): Promise<NewsItem[]> {
                 businessJustification: justification,
                 pestelCategory,
                 impactType,
+                relevance,
             });
         }
 

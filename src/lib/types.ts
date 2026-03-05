@@ -6,6 +6,9 @@ export type PestelCategory = 'politique' | 'economique' | 'social' | 'technologi
 // Impact qualification for strategic decision-making
 export type ImpactType = 'opportunity' | 'threat' | 'neutral';
 
+// How relevant this article is to AEA's business
+export type RelevanceTier = 'high' | 'medium' | 'low';
+
 export interface NewsSource {
   id: string;
   name: string;
@@ -29,6 +32,7 @@ export interface NewsItem {
   businessJustification?: string; // WHY this is relevant for Alsace Esport Arena
   pestelCategory?: PestelCategory; // PESTEL axis classification
   impactType?: ImpactType; // Opportunity, threat, or neutral
+  relevance?: RelevanceTier; // How relevant to AEA's business
 }
 
 export interface DashboardStats {
